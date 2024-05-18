@@ -2,9 +2,8 @@ package model.graph
 
 class Graph<D> {
   var isDirected: Boolean = false
-  val vertices: MutableList<Vertex<D>> = mutableListOf()
-  val edges: MutableList<Edge> = mutableListOf()
+  val vertices = mutableListOf<Vertex<D>>()
+  val edges = mutableListOf<Edge<D>>()
 
-  fun addVertex(id: Int, data: D) = vertices.add(Vertex(id, data))
-  fun addEdge(v: Pair<Int, Int>, w: Int?) = edges.add(Edge(v, w))
-}
+  fun addVertex(d: D) = vertices.add(Vertex(d))
+  fun addEdge(v: Pair<D, D>, w: Int?) = edges.add(Edge(Pair(Vertex(v.first), Vertex(v.second)), w))
