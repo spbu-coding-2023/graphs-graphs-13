@@ -1,9 +1,15 @@
 package model.graph
 
-class Graph<D> {
-  var isDirected: Boolean = false
-  val vertices = mutableListOf<Vertex<D>>()
+abstract class Graph<D> {
+  val adjacency = hashMapOf<Int, HashMap<Int, Int?>>() //
+  val vertices = hashMapOf<Int, Vertex<D>>()
   val edges = mutableListOf<Edge<D>>()
+  fun getVertices(): Collection<Vertex<D>> = vertices.values
+  fun addVertex(id: Int, data: D) {
+    if (vertices.containsKey(id)) {
+      throw IllegalArgumentException("Vertex with id: $id already exists in the graph.")
+    }
+    vertices[id] = Vertex(id, data)
+  }
+}
 
-  fun addVertex(d: D) = vertices.add(Vertex(d))
-  fun addEdge(v: Pair<D, D>, w: Int?) = edges.add(Edge(Pair(Vertex(v.first), Vertex(v.second)), w))
