@@ -4,13 +4,13 @@ import model.graph.*
 import java.util.PriorityQueue
 
 class Dijkstra<D>(private val graph: Graph<D>) {
+  private val distances = hashMapOf<Int, Int>()
+  private val previousVertices = hashMapOf<Int, Int?>()
+  private val queue = PriorityQueue<Pair<Int, Int>>(compareBy { it.second })
   fun findShortestPaths(start: Int, end: Int): List<Int> {
     if (!graph.vertices.contains(start) || !graph.vertices.contains(end)) {
       throw NoSuchElementException("The vertex doesn't exist in the graph.")
     }
-    val distances = hashMapOf<Int, Int>()
-    val previousVertices = hashMapOf<Int, Int?>()
-    val queue = PriorityQueue<Pair<Int, Int>>(compareBy { it.second })
     distances[start] = 0
     queue.add(Pair(start, 0))
 
