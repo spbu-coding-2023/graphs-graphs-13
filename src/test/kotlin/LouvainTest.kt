@@ -1,5 +1,6 @@
 import model.algorithms.Louvain
-import model.graph.*
+import model.graph.UndirectedGraph
+import model.graph.DirectedGraph
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 

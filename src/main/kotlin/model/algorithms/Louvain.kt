@@ -1,6 +1,6 @@
 package model.algorithms
 
-import model.graph.*
+import model.graph.Graph
 
 /**
  * Louvain algorithm for detecting communities in a graph.
