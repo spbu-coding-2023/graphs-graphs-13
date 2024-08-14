@@ -1,4 +1,4 @@
-name: Test 
+name: Test # autorun of the project build and tests
 
 on: 
   pull_request:
