@@ -4,11 +4,10 @@ on:
   pull_request:
     paths:
       - '**.kt'
-      - '**.yml'
   push:
     paths:
       - '**.kt'
-      - '**.yml'
+  workflow_dispatch:
 
 jobs: 
   test:
