@@ -1,6 +1,5 @@
 import model.algorithms.Prim
 import model.graph.UndirectedGraph
-import model.graph.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import forTests.addVertices
