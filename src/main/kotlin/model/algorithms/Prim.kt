@@ -2,8 +2,29 @@ package model.algorithms
 
 import model.graph.UndirectedGraph
 
+/**
+ * The class [Prim] implements the Prim's algorithm for construction Minimum spanning tree (MST) from
+ * undirected weighted graph.
+ *
+ * At the same time, if the graph consists of several connectivity components,
+ * the algorithm constructs a forest, each tree of which is MST.
+ * @param D input type
+ * @property [graph] a undirected weighted graph, whose MST we want to construct
+ * @constructor Creates a graph, based on [graph], to which the following functions can be applied:
+ * function [treePrim] : returns MST for [graph]
+ * function [weightPrim] : returns the weight of received MST
+ */
+
 class Prim<D>(private val graph: UndirectedGraph<D>) {
 
+    /**
+     * This function implements Prim's algorithm for
+     * constuction MST for transmitted connectivity component
+     *
+     * @param graph a connectivity component,
+     * @return MST of connectivity component
+     * @receiver fun [treePrim]
+     */
     private fun getMST(graph: UndirectedGraph<D>): UndirectedGraph<D> {
 
         val graphMst = UndirectedGraph<D>()
@@ -55,6 +76,17 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
 
     }
 
+    /**
+     * The function finds the connectivity component
+     * and returns it to apply the Prim's algorithm to it
+     *
+     * @param idVertex init vertex for dfs
+     * @param visited stores information about which vertices of the graph
+     * have already been processed by the Prim's algorithm
+     * @param component found connectivity component of the graph
+     * @return found connectivity component
+     * @receiver fun [treePrim]
+     */
     private fun dfs(
         idVertex: Int,
         visited: HashMap<Int, Boolean>,
@@ -77,7 +109,14 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
         return component
     }
 
-    private fun privateTreePrim(): MutableList<UndirectedGraph<D>> {
+    /**
+     * The function finds the connectivity components of the graph
+     * and then builds MST for each of them
+     *
+     * @return list of MST for each connectivity component of graph
+     * @receiver  fun [weightPrim]
+     */
+    fun treePrim(): MutableList<UndirectedGraph<D>> {
 
         val returnListOfMST = mutableListOf<UndirectedGraph<D>>()
 
@@ -91,7 +130,7 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
         while (visited.values.contains(false)) {
 
             initIndex = visited.filterValues { !it }.keys.first()
-            component = UndirectedGraph()
+            component = UndirectedGraph<D>()
             component.addVertex(initIndex, graph.vertices[initIndex]!!.data)
             component = dfs(initIndex, visited, component)
             returnListOfMST.add(getMST(component))
@@ -102,16 +141,15 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
 
     }
 
-    fun treePrim(): MutableList<UndirectedGraph<D>> {
-
-        return privateTreePrim()
-
-    }
-
+    /**
+     * Counts the weight of received MST
+     *
+     * @return weight of MST
+     */
     fun weightPrim(): Int {
 
         var treeWeight: Int = 0
-        for (element in privateTreePrim()) {
+        for (element in treePrim()) {
             for (edge in element.edges) {
 
                 if (edge.weight == null) {
