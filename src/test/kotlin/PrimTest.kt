@@ -1,103 +1,92 @@
 import model.algorithms.Prim
 import model.graph.UndirectedGraph
-import model.graph.DirectedGraph
-import model.graph.Edge
-import model.graph.Vertex
+import model.graph.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import forTests.addVertices
 
-class PrimTest{ //4 TESTS
+class PrimTest {
+
+    private val undirGraph = UndirectedGraph<Int>()
+    private var primGraph = Prim(undirGraph)
 
     @Test
-    fun `a graph consists of two vertices and one edge`() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `construction of MST from a graph consisting of a single vertex must be correct`() {
 
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
+        addVertices(undirGraph, 1)
 
-        initGraph.addEdge(1 to 2, 9)
-        val mstGraph = MST<Int>(initGraph)
-        val MSTree : UndirectedGraph<Int> = mstGraph.getMST()
-        assertEquals( listOf(Edge<Int>(2 to 1, 9),Edge<Int>(1 to 2, 9)), MSTree.edges )
-        assertEquals( setOf(Vertex<Int>(1,1),Vertex<Int>(2,2)), setOf( MSTree.vertices ) )
+        assertEquals(0, primGraph.weightPrim())
 
     }
 
     @Test
-    fun `a triangle-shaped graph, checking for the content of cycles in the MSTree`() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `construction of MST from 2 components must be correct`() {
 
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3,3)
+        addVertices(undirGraph, 5)
+        undirGraph.run {
+            addEdge(1 to 2, 23)
+            addEdge(2 to 3, 3)
+            addEdge(1 to 3, 41)
+            addEdge(4 to 5, 12)
+        }
 
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(1 to 3, 5)
-        initGraph.addEdge(2 to 3, 1)
-
-        val graph = MST<Int>(initGraph)
-        val MSTree : UndirectedGraph<Int> = graph.getMST()
-        val weightsEdgesOfMST = mutableListOf<Int>()
-        (MSTree.edges).forEach{ weightsEdgesOfMST.add(it.weight!!) }
-        assertEquals(2,weightsEdgesOfMST.size) // amount of edges
-        assertEquals(setOf(1,5),setOf(weightsEdgesOfMST)) // edge values
-        assertEquals( setOf(Vertex<Int>(1,1),Vertex<Int>(2,2),Vertex<Int>(3,3)), setOf( MSTree.vertices ) )
+        assertEquals(38, primGraph.weightPrim())
 
     }
 
     @Test
-    fun `a graph in the form of a square with diagonals and a vertex in the middle`() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `construction of MST from tree must be correct`() { //when building a MST from a tree, we need to get the original tree
 
-        initGraph.addVertex(1,1)
-        initGraph.addVertex(2,2)
-        initGraph.addVertex(3,3)
-        initGraph.addVertex(4,4)
-        initGraph.addVertex(5,5)
+        addVertices(undirGraph, 4)
 
-        initGraph.addEdge(1 to 2,9)
-        initGraph.addEdge(1 to 4,3)
-        initGraph.addEdge(1 to 5,0)
-        initGraph.addEdge(2 to 4,13)
-        initGraph.addEdge(2 to 3,47)
-        initGraph.addEdge(3 to 4,31)
-        initGraph.addEdge(3 to 5,2)
-        initGraph.addEdge(5 to 4,6)
+        undirGraph.run {
+            addEdge(3 to 1, 3)
+            addEdge(3 to 2, 8)
+            addEdge(3 to 4, 21)
+        }
 
-        val graph = MST<Int>(initGraph)
-        val MSTree : UndirectedGraph<Int> = graph.getMST()
-        val weightsEdgesOfMST = mutableListOf<Int>()
-        (MSTree.edges).forEach{ weightsEdgesOfMST.add(it.weight!!) }
-        assertEquals(setOf(0,2,3,9),setOf(weightsEdgesOfMST))
-        assertEquals(true,weightsEdgesOfMST.groupBy { it }.values.map { it.size }.all{ it == 2 })
+        assertEquals(32, primGraph.weightPrim())
 
     }
 
     @Test
-    fun `a graph in the form of a square with diagonals and a vertex in the middle with the same weight`() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `construction of MST from graph consisting of edges with equal weight must be correct`() {
 
-        initGraph.addVertex(1,1)
-        initGraph.addVertex(2,2)
-        initGraph.addVertex(3,3)
-        initGraph.addVertex(4,4)
-        initGraph.addVertex(5,5)
+        addVertices(undirGraph, 4)
 
-        initGraph.addEdge(1 to 2,3)
-        initGraph.addEdge(1 to 4,3)
-        initGraph.addEdge(1 to 5,3)
-        initGraph.addEdge(2 to 4,3)
-        initGraph.addEdge(2 to 3,3)
-        initGraph.addEdge(3 to 4,3)
-        initGraph.addEdge(3 to 5,3)
-        initGraph.addEdge(5 to 4,3)
+        undirGraph.run {
+            addEdge(1 to 2, 20)
+            addEdge(1 to 4, 20)
+            addEdge(3 to 2, 20)
+            addEdge(3 to 4, 20)
+        }
 
-        val graph = MST<Int>(initGraph)
-        val MSTree : UndirectedGraph<Int> = graph.getMST()
-        val weightsEdgesOfMST = mutableListOf<Int>()
-        (MSTree.edges).forEach{ weightsEdgesOfMST.add(it.weight!!) }
-        assertEquals(3,setOf(weightsEdgesOfMST))
-        assertEquals(4,weightsEdgesOfMST.size)
+        assertEquals(60, primGraph.weightPrim())
+
+    }
+
+    @Test
+    fun `construction of MST from non-trivial(more complex) graph must be correct`() {
+
+        addVertices(undirGraph, 10)
+
+        undirGraph.run {
+            addEdge(1 to 2, 5)
+            addEdge(2 to 3, 11)
+            addEdge(3 to 4, 25)
+            addEdge(4 to 8, 24)
+            addEdge(1 to 4, 1)
+            addEdge(2 to 5, 42)
+            addEdge(5 to 3, 11)
+            addEdge(5 to 4, 54)
+            addEdge(8 to 9, 73)
+            addEdge(6 to 7, 130)
+            addEdge(7 to 9, 4)
+            addEdge(8 to 7, 9)
+            addEdge(8 to 10, 42)
+        }
+
+        assertEquals(237, primGraph.weightPrim())
 
     }
 

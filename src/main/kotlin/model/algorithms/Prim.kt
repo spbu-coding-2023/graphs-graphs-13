@@ -1,40 +1,169 @@
 package model.algorithms
 
-import model.graph.*
+import model.graph.UndirectedGraph
 
-class MST<D>(private val graph: UndirectedGraph<D>) { /
-    /**get the graph, make from it the MST and return it*/
-    fun getMST(): UndirectedGraph<D> {
+/**
+ * The class [Prim] implements the Prim's algorithm for construction Minimum spanning tree (MST) from
+ * undirected weighted graph.
+ *
+ * At the same time, if the graph consists of several connectivity components,
+ * the algorithm constructs a forest, each tree of which is MST.
+ * @param D input type
+ * @property [graph] a undirected weighted graph, whose MST we want to construct
+ * @constructor Creates a graph, based on [graph], to which the following functions can be applied:
+ * function [treePrim] : returns MST for [graph]
+ * function [weightPrim] : returns the weight of received MST
+ */
 
-        val newGraph = UndirectedGraph<D>()
-        var minWeight: Int
-        var addedVertex: Vertex<D>? = null
-        var pairForAddedEdge: Pair<Int, Int>? = null
-        for (vertexId in graph.vertices.keys) { // добавили рондомную вершинку
-            graph.vertices[vertexId]?.let { newGraph.addVertex(vertexId, it.data) }
-            break
+class Prim<D>(private val graph: UndirectedGraph<D>) {
+
+    /**
+     * This function implements Prim's algorithm for
+     * constuction MST for transmitted connectivity component
+     *
+     * @param graph a connectivity component,
+     * @return MST of connectivity component
+     * @receiver fun [treePrim]
+     */
+    private fun getMST(graph: UndirectedGraph<D>): UndirectedGraph<D> {
+
+        val graphMst = UndirectedGraph<D>()
+
+        for (vertex in graph.vertices.keys) {
+            graphMst.addVertex(vertex, graph.vertices[vertex]!!.data)
         }
-        while (newGraph.vertices.size != graph.vertices.size) {
-            minWeight =
-                Int.MAX_VALUE // в нашем приложении должно быть ограничение на значение веса ребра : < Int.MAX_VALUE
-            for (vertex in newGraph.vertices) {
-                for (edge in graph.adjacency[vertex.key]!!) {
-                    if (!(graph.vertices[edge.key] in newGraph.vertices.values && vertex.value in newGraph.vertices.values)) { //избегаем появления циклов в новом графе, т.к. он должен быть деревом
-                        if (edge.value == null) {
-                            throw IllegalArgumentException ("Exists the edge without weight")
-                        } else if (edge.value!! <= minWeight) {
-                            minWeight = edge.value!!
-                            pairForAddedEdge = vertex.key to edge.key
-                            addedVertex = graph.vertices[edge.key]
-                        }
-                    }
+
+        val priorityQueue = hashMapOf<Int, Pair<Int, Int?>>()
+        for (idVertex in graph.vertices.keys) {
+            priorityQueue[idVertex] = Int.MAX_VALUE to null
+        }
+
+        //init Prim's algorithm
+
+        val rootIdVertex: Int = graph.vertices.keys.first()
+        for (idAdjacency in graph.adjacency[rootIdVertex]!!.keys) { // неправильные соседи
+            priorityQueue[idAdjacency] = graph.adjacency[rootIdVertex]!![idAdjacency]!! to rootIdVertex
+        }
+        priorityQueue.remove(rootIdVertex)
+
+        //Prim's algorithm
+
+        var fromQueuePrioritet: Int
+        var fromQueueId: Int? = null
+        while (priorityQueue.isNotEmpty()) {
+
+            fromQueuePrioritet = Int.MAX_VALUE
+            for (element in priorityQueue) {
+                if (element.value.first <= fromQueuePrioritet) {
+                    fromQueuePrioritet = element.value.first
+                    fromQueueId = element.key
                 }
             }
-            newGraph.addVertex(addedVertex!!.id, addedVertex.data)
-            newGraph.addEdge(pairForAddedEdge!!, minWeight)
+
+            for (adjacency in graph.adjacency[fromQueueId]!!.filter { it.key in priorityQueue.keys }) {
+                if (graph.adjacency[fromQueueId]!![adjacency.key]!! < priorityQueue[adjacency.key]!!.first) {
+                    priorityQueue.remove(adjacency.key)
+                    priorityQueue[adjacency.key] = graph.adjacency[fromQueueId]!![adjacency.key]!! to fromQueueId
+                }
+            }
+
+            graphMst.addEdge(fromQueueId!! to priorityQueue[fromQueueId]!!.second!!, fromQueuePrioritet)
+            priorityQueue.remove(fromQueueId)
+
         }
 
-        return newGraph
+        return graphMst
+
+    }
+
+    /**
+     * The function finds the connectivity component
+     * and returns it to apply the Prim's algorithm to it
+     *
+     * @param idVertex init vertex for dfs
+     * @param visited stores information about which vertices of the graph
+     * have already been processed by the Prim's algorithm
+     * @param component found connectivity component of the graph
+     * @return found connectivity component
+     * @receiver fun [treePrim]
+     */
+    private fun dfs(
+        idVertex: Int,
+        visited: HashMap<Int, Boolean>,
+        component: UndirectedGraph<D>
+    ): UndirectedGraph<D> {
+
+        visited[idVertex] = true
+        for (idAdjacency in graph.adjacency[idVertex]!!.keys) {
+            if (visited[idAdjacency] == false) {
+                visited[idAdjacency] = true
+                component.addVertex(idAdjacency, graph.vertices[idAdjacency]!!.data)
+                dfs(idAdjacency, visited, component)
+            }
+        }
+        for (edge in this.graph.edges) {
+            if (edge.vertices.first in component.vertices && edge.vertices.second in component.vertices && edge !in component.edges) {
+                component.addEdge(edge.vertices, edge.weight)
+            }
+        }
+        return component
+    }
+
+    /**
+     * The function finds the connectivity components of the graph
+     * and then builds MST for each of them
+     *
+     * @return list of MST for each connectivity component of graph
+     * @receiver  fun [weightPrim]
+     */
+    fun treePrim(): MutableList<UndirectedGraph<D>> {
+
+        val returnListOfMST = mutableListOf<UndirectedGraph<D>>()
+
+        val visited = hashMapOf<Int, Boolean>()
+        for (vertexId in graph.vertices.keys) {
+            visited[vertexId] = false
+        }
+
+        var initIndex: Int
+        var component: UndirectedGraph<D>
+        while (visited.values.contains(false)) {
+
+            initIndex = visited.filterValues { !it }.keys.first()
+            component = UndirectedGraph<D>()
+            component.addVertex(initIndex, graph.vertices[initIndex]!!.data)
+            component = dfs(initIndex, visited, component)
+            returnListOfMST.add(getMST(component))
+
+        }
+
+        return returnListOfMST
+
+    }
+
+    /**
+     * Counts the weight of received MST
+     *
+     * @return weight of MST
+     */
+    fun weightPrim(): Int {
+
+        var treeWeight: Int = 0
+        for (element in treePrim()) {
+            for (edge in element.edges) {
+
+                if (edge.weight == null) {
+                    throw IllegalArgumentException("Each edge of a weighted graph must have a weight: the edge with weight = 'null' isn't correct")
+                } else {
+                    treeWeight += edge.weight!!
+                }
+
+            }
+
+        }
+
+        return treeWeight / 2
+
     }
 
 }
