@@ -1,0 +1,27 @@
+name: Test 
+
+on: 
+  pull_request:
+    paths:
+      - '**.kt'
+      - '**.yml'
+  push:
+    paths:
+      - '**.kt'
+      - '**.yml'
+
+jobs: 
+  test:
+    runs-on: ubuntu-latest 
+    steps: 				   
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: zulu
+      - name: Build 
+        run: ./gradlew build -x test 
+      - name: Test
+        run: ./gradlew test 
