@@ -1,142 +1,88 @@
 import model.algorithms.CycleSearch
 import model.graph.UndirectedGraph
-import model.graph.DirectedGraph
-import model.graph.Edge
+import model.graph.Vertex
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import forTests.addVertices
+import kotlin.test.assertFailsWith
 
-class CycleSearchTest { //6 TESTS
+class CycleSearchTest {
 
-    //region UNDIRECTED GRAPH (3)
+    private var graph = UndirectedGraph<Int>()
+    private var cycleGraph = CycleSearch(graph)
 
     @Test
-    fun ` a triangle-shaped undirected graph wiht cycle `() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `passing as function argument a non-existent vertex should throw an exception`() {
 
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
+        addVertices(graph, 3)
+        assertFailsWith<IllegalArgumentException> { cycleGraph.findCycle(Vertex(4, 4)) }
 
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(2 to 3, 5)
-        initGraph.addEdge(3 to 1, 1)
+    }
 
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(1)
-        assertEquals(true, cycleEdges != null)
-        for (edge in initGraph.edges) {
-            assertEquals(true, edge in cycleEdges!!)
+    @Test
+    fun `search for a cycle at a single vertex must be correct`() {
+
+        addVertices(graph, 1)
+        assertEquals(null, cycleGraph.findCycle(graph.vertices[1]!!))
+
+    }
+
+    @Test
+    fun `search for a cycle at the graph that is a tree must be correct`() {
+
+        addVertices(graph, 4)
+        graph.run {
+            addEdge(1 to 2, 23)
+            addEdge(2 to 3, 12)
+            addEdge(4 to 2, 4)
         }
-        for (edge in cycleEdges!!) {
-            assertEquals(true, edge in initGraph.edges)
+        assertEquals(null, cycleGraph.findCycle(graph.vertices[1]!!))
+
+    }
+
+    @Test
+    fun `search for a cycle at the graph that is a cycle must be correct`() {
+
+        addVertices(graph, 3)
+        graph.run {
+            addEdge(1 to 2, 23)
+            addEdge(2 to 3, 12)
+            addEdge(1 to 3, 4)
         }
-    }
-
-    @Test
-    fun ` undirected graph consisted of 4 vertices without cycle`() {
-        val initGraph = UndirectedGraph<Int>()
-
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
-        initGraph.addVertex(4, 4)
-
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(1 to 3, 5)
-        initGraph.addEdge(1 to 4, 1)
-
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(1)
-        assertEquals(null, cycleEdges)
+        cycleGraph.findCycle(graph.vertices[1]!!)
 
     }
 
     @Test
-    fun ` the cycle of the undirected graph exists, but not around the input vertex `() {
-        val initGraph = UndirectedGraph<Int>()
+    fun `search for a cycle at the graph around vertex with many adjacency must be correct`() {
 
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
-        initGraph.addVertex(4, 4)
-
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(2 to 3, 5)
-        initGraph.addEdge(3 to 4, 3)
-        initGraph.addEdge(4 to 2, 1)
-
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(1)
-        assertEquals(null, cycleEdges)
-
-    }
-
-    //endregion
-
-    //region DIRECTED GRAPH (3)
-
-    @Test
-    fun ` a triangle-shaped directed graph whith cycle `() {
-        val initGraph = DirectedGraph<Int>()
-
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
-
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(2 to 3, 5)
-        initGraph.addEdge(3 to 1, 1)
-
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(1)
-        assertEquals(true, cycleEdges != null)
-        for (edge in initGraph.edges) {
-            assertEquals(true, edge in cycleEdges!!)
+        addVertices(graph, 6)
+        graph.run {
+            addEdge(1 to 2, 1)
+            addEdge(2 to 3, 2)
+            addEdge(2 to 5, 5)
+            addEdge(2 to 6, 7)
+            addEdge(3 to 4, 3)
+            addEdge(4 to 5, 4)
+            addEdge(5 to 6, 6)
         }
-        for (edge in cycleEdges!!) {
-            assertEquals(true, edge in initGraph.edges)
+        assertEquals(true, cycleGraph.findCycle(graph.vertices[2]!!) != null)
+
+    }
+
+    @Test
+    fun `search for a cycle at the graph containing cycle, but around vertex without cycle must be correct`() {
+
+        addVertices(graph, 5)
+        graph.run {
+            addEdge(1 to 2, 13)
+            addEdge(2 to 3, 21)
+            addEdge(3 to 1, 67)
+            addEdge(3 to 4, 41)
+            addEdge(4 to 5, 10)
         }
-        // проверили равенство наборов ребер у первоначального графа и у цикла
-    }
-
-    @Test
-    fun ` a triangle-shaped directed graph without cycle `() {
-        val initGraph = DirectedGraph<Int>()
-
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
-
-        initGraph.addEdge(1 to 2, 10)
-        initGraph.addEdge(1 to 3, 5)
-        initGraph.addEdge(2 to 3, 1)
-
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(1)
-        assertEquals(null, cycleEdges)
+        assertEquals(null, cycleGraph.findCycle(graph.vertices[4]!!))
 
     }
-
-    @Test
-    fun ` the cycle of the directed graph exists, but not around the input vertex `() {
-        val initGraph = DirectedGraph<Int>()
-
-        initGraph.addVertex(0, 0)
-        initGraph.addVertex(1, 1)
-        initGraph.addVertex(2, 2)
-        initGraph.addVertex(3, 3)
-
-        initGraph.addEdge(0 to 1, 10)
-        initGraph.addEdge(1 to 2, 7)
-        initGraph.addEdge(2 to 3, 5)
-        initGraph.addEdge(3 to 1, 1)
-
-        val graph = CycleSearch<Int>(initGraph)
-        val cycleEdges: List<Edge<Int>>? = graph.findCycle(0)
-        assertEquals(null, cycleEdges)
-
-    }
-
-    //endregion
 
 }
