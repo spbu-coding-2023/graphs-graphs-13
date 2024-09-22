@@ -16,7 +16,7 @@ class GraphViewModel<D>(
 
   init {
     graph.getVertices().forEach { vertex ->
-      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, Color.Blue, vertex, showVerticesLabels)
+      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, Color.Gray, vertex, showVerticesLabels)
     }
   }
 
