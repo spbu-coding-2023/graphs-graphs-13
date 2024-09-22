@@ -68,11 +68,13 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
           }
           DropdownMenuItem(onClick = {
             expanded = false
+            viewModel.runKosarajuAlgorithm()
           }) {
             Text("Kosaraju")
           }
           DropdownMenuItem(onClick = {
             expanded = false
+            viewModel.runLouvainAlgorithm()
           }) {
             Text("Louvain")
           }
