@@ -53,4 +53,22 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       }
     }
   }
+
+  fun runLouvainAlgorithm() {
+    val colors = listOf(
+      Color(240, 128, 128),
+      Color(106, 90, 205),
+      Color(102, 205, 170),
+      Color(188, 143, 143),
+      Color(218, 112, 214)
+    )
+    resetGraphView()
+    val louvain = Louvain(graph)
+    val result = louvain.detectCommunities()
+    for ((i, community) in result.withIndex()) {
+      for (vertexId in community) {
+        graphViewModel.verticesView[vertexId]?.color = colors[i % 5]
+      }
+    }
+  }
 }
