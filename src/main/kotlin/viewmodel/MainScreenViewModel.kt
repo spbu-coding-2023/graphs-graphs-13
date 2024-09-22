@@ -20,8 +20,4 @@ class MainScreenViewModel<D>(graph: Graph<D>, private val representationStrategy
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesViewValues)
     graphViewModel.verticesViewValues.forEach { v -> v.color = Color.Gray }
   }
-
-  fun setVerticesColor() {
-    representationStrategy.highlight(graphViewModel.verticesViewValues)
-  }
 }

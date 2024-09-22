@@ -31,15 +31,6 @@ class CircularPlacementStrategy : RepresentationStrategy {
       }
   }
 
-  override fun <D> highlight(vertices: Collection<VertexViewModel<D>>) {
-    val customColor1 = Color(red = 235, green = 82, blue = 132) //235,82,132
-    val customColor2 = Color(red = 251, green = 160, blue = 227) //251,160,227
-    vertices
-      .onEach {
-        it.color = if (Random.nextBoolean()) customColor1 else customColor2
-      }
-  }
-
   private fun Pair<Double, Double>.rotate(pivot: Pair<Double, Double>, angle: Double): Pair<Double, Double> {
     val sin = sin(angle)
     val cos = cos(angle)
