@@ -34,8 +34,7 @@ fun <D> VertexView(
     if (viewModel.labelVisible) {
       Text(
         modifier = Modifier
-          .align(Alignment.Center)
-          .offset(0.dp, -viewModel.radius - 10.dp),
+          .align(Alignment.Center),
         text = viewModel.label,
       )
     }

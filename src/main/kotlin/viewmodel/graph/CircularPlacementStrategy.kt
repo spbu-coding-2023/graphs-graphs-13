@@ -13,8 +13,6 @@ class CircularPlacementStrategy : RepresentationStrategy {
       println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
       return
     }
-
-
     val center = Pair(width / 2, height / 2)
     val angle = 2 * Math.PI / vertices.size
 
@@ -34,11 +32,11 @@ class CircularPlacementStrategy : RepresentationStrategy {
   }
 
   override fun <D> highlight(vertices: Collection<VertexViewModel<D>>) {
-    val customColor_1 = Color(red = 235, green = 82, blue = 132) //235,82,132
-    val customColor_2 = Color(red = 251, green = 160, blue = 227) //251,160,227
+    val customColor1 = Color(red = 235, green = 82, blue = 132) //235,82,132
+    val customColor2 = Color(red = 251, green = 160, blue = 227) //251,160,227
     vertices
       .onEach {
-        it.color = if (Random.nextBoolean()) customColor_1 else customColor_2
+        it.color = if (Random.nextBoolean()) customColor1 else customColor2
       }
   }
 
