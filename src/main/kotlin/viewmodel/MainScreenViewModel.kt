@@ -24,6 +24,8 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     graphViewModel.verticesViewValues.forEach { v -> v.color = Color.Gray }
   }
 
+  /** Paint the vertices of the found path.
+   */
   fun runDijkstraAlgorithm(start: Int, end: Int) {
     resetGraphView()
     val dijkstra = Dijkstra(graph)
@@ -33,6 +35,9 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     }
   }
 
+  /** Paint each ccs its own color. The number of colors is limited,
+   *  so if there are more than 5 ccs, the colors will begin to repeat.
+   */
   fun runKosarajuAlgorithm() {
     if (graph is UndirectedGraph) {
       throw IllegalArgumentException("Kosaraju's algorithm cannot be run on undirected graphs.")
@@ -54,6 +59,9 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     }
   }
 
+  /** Paint each community its own color. The number of colors is limited,
+   *  so if there are more than 5 communities, the colors will begin to repeat.
+   */
   fun runLouvainAlgorithm() {
     val colors = listOf(
       Color(240, 128, 128),
