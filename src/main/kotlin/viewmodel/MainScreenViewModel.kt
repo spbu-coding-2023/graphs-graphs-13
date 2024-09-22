@@ -31,7 +31,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     val dijkstra = Dijkstra(graph)
     val result = dijkstra.findShortestPaths(start, end)
     for (vertexId in result) {
-      graphViewModel.verticesView[vertexId]?.color = Color(240, 128, 128)
+      graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
     }
   }
 
