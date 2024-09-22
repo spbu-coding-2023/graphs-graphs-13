@@ -43,11 +43,11 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       throw IllegalArgumentException("Kosaraju's algorithm cannot be run on undirected graphs.")
     }
     val colors = listOf(
-      Color(240, 128, 128),
-      Color(106, 90, 205),
-      Color(102, 205, 170),
-      Color(188, 143, 143),
-      Color(218, 112, 214)
+      Color(125, 21, 21),
+      Color(41, 37, 37),
+      Color(145, 86, 86),
+      Color(56, 4, 4),
+      Color(161, 161, 161)
     )
     resetGraphView()
     val kosaraju = Kosaraju(graph as DirectedGraph)
@@ -64,11 +64,11 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
    */
   fun runLouvainAlgorithm() {
     val colors = listOf(
-      Color(240, 128, 128),
-      Color(106, 90, 205),
-      Color(102, 205, 170),
-      Color(188, 143, 143),
-      Color(218, 112, 214)
+      Color(125, 21, 21),
+      Color(41, 37, 37),
+      Color(145, 86, 86),
+      Color(56, 4, 4),
+      Color(161, 161, 161)
     )
     resetGraphView()
     val louvain = Louvain(graph)
