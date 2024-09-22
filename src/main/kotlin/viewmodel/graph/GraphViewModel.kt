@@ -13,16 +13,12 @@ class GraphViewModel<D>(
   showEdgesLabels: State<Boolean>,
 ) {
   internal val verticesView: HashMap<Int, VertexViewModel<D>> = hashMapOf()
+  internal val edgesView: HashMap<Edge<D>, EdgeViewModel<D>> = hashMapOf()
 
   init {
     graph.getVertices().forEach { vertex ->
       verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, Color.Gray, vertex, showVerticesLabels)
     }
-  }
-
-  internal val edgesView: HashMap<Edge<D>, EdgeViewModel<D>> = hashMapOf()
-
-  init {
     graph.edges.forEach { edge ->
       val fst = verticesView[edge.vertices.first]
         ?: throw IllegalStateException("VertexView for vertex with id: ${edge.vertices.first} not found")
