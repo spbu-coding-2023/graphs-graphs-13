@@ -19,10 +19,10 @@ fun <D>GraphView(
     .fillMaxSize()
 
   ) {
-    viewModel.verticesViewValues.forEach { v ->
+    viewModel.verticesView.values.forEach { v ->
       VertexView(v, Modifier)
     }
-    viewModel.edgesViewValues.forEach { e ->
+    viewModel.edgesView.values.forEach { e ->
       EdgeView(e, Modifier)
     }
   }
