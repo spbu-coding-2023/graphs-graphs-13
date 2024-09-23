@@ -52,7 +52,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
   }
 
   /** Paint each ccs its own color. The number of colors is limited,
-   *  so if there are more than 5 ccs, the colors will begin to repeat.
+   *  so if there are more than 10 ccs, the colors will begin to repeat.
    */
   fun runKosarajuAlgorithm() {
     if (graph is UndirectedGraph) {
@@ -63,20 +63,25 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       Color(41, 37, 37),
       Color(145, 86, 86),
       Color(56, 4, 4),
-      Color(161, 161, 161)
+      Color(161, 161, 161),
+      Color(115, 72, 101),
+      Color(38, 11, 29),
+      Color(255, 133, 141),
+      Color(99, 48, 37),
+      Color(61, 67, 74)
     )
     resetGraphView()
     val kosaraju = Kosaraju(graph as DirectedGraph)
     val result = kosaraju.findStronglyConnectedComponents()
     for ((i, ccs) in result.withIndex()) {
       for (vertexId in ccs) {
-        graphViewModel.verticesView[vertexId]?.color = colors[i % 5]
+        graphViewModel.verticesView[vertexId]?.color = colors[i % 10]
       }
     }
   }
 
   /** Paint each community its own color. The number of colors is limited,
-   *  so if there are more than 5 communities, the colors will begin to repeat.
+   *  so if there are more than 10 communities, the colors will begin to repeat.
    */
   fun runLouvainAlgorithm() {
     val colors = listOf(
@@ -84,14 +89,19 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       Color(41, 37, 37),
       Color(145, 86, 86),
       Color(56, 4, 4),
-      Color(161, 161, 161)
+      Color(161, 161, 161),
+      Color(115, 72, 101),
+      Color(38, 11, 29),
+      Color(255, 133, 141),
+      Color(99, 48, 37),
+      Color(61, 67, 74)
     )
     resetGraphView()
     val louvain = Louvain(graph)
     val result = louvain.detectCommunities()
     for ((i, community) in result.withIndex()) {
       for (vertexId in community) {
-        graphViewModel.verticesView[vertexId]?.color = colors[i % 5]
+        graphViewModel.verticesView[vertexId]?.color = colors[i % 10]
       }
     }
   }
