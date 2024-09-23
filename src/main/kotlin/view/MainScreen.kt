@@ -376,3 +376,68 @@ fun RemoveVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int) -> Unit) {
     }
   )
 }
+
+@Composable
+fun AddEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Unit) {
+  var from by remember { mutableStateOf("") }
+  var to by remember { mutableStateOf("") }
+  var w by remember { mutableStateOf<String?>(null) }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Enter edge parameters")
+    },
+    text = {
+      Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+          value = from,
+          onValueChange = { from = it },
+          label = { Text("Enter the start id:") },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+        TextField(
+          value = to,
+          onValueChange = { to = it },
+          label = { Text("Enter the end id:") },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+        TextField(
+          value = w ?: "",
+          onValueChange = { newValue ->
+            w = newValue.ifEmpty { null }
+          },
+          label = { Text("Enter the weight (optional):") },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          val fromInt = from.toIntOrNull()
+          val toInt = to.toIntOrNull()
+          val wInt = w?.toIntOrNull()
+
+          if (fromInt != null && toInt != null) {
+            onRunAlgorithm(fromInt, toInt, wInt)
+          }
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Add the edge", color = Color(255, 250, 250))
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Cancel", color = Color(255, 250, 250))
+      }
+    }
+  )
+}
