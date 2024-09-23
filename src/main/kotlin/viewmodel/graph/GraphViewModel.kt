@@ -51,4 +51,16 @@ class GraphViewModel<D>(
       edgesView[edge] = EdgeViewModel(fst, snd, edge, showEdgesLabels)
     }
   }
+
+  fun removeEdge(from: Int, to: Int, w: Int?) {
+    graph.removeEdge(Pair(from, to), w)
+    edgesView.keys.find { it.vertices == Pair(from, to) }?.let { edge ->
+      edgesView.remove(edge)
+    }
+    if (graph is UndirectedGraph) {
+      edgesView.keys.find { it.vertices == Pair(to, from) }?.let { edge ->
+        edgesView.remove(edge)
+      }
+    }
+  }
 }
