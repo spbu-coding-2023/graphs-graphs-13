@@ -5,12 +5,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import model.graph.Edge
 import model.graph.Graph
+import model.graph.UndirectedGraph
 import model.graph.Vertex
 
 class GraphViewModel<D>(
   private val graph: Graph<D>,
-  showVerticesLabels: State<Boolean>,
-  showEdgesLabels: State<Boolean>,
+  private val showVerticesLabels: State<Boolean>,
+  private val showEdgesLabels: State<Boolean>,
 ) {
   internal val verticesView: HashMap<Int, VertexViewModel<D>> = hashMapOf()
   internal val edgesView: HashMap<Edge<D>, EdgeViewModel<D>> = hashMapOf()
@@ -28,9 +29,8 @@ class GraphViewModel<D>(
     }
   }
 
-  val verticesViewValues: Collection<VertexViewModel<D>>
-    get() = verticesView.values
-
-  val edgesViewValues: Collection<EdgeViewModel<D>>
-    get() = edgesView.values
+  fun addVertex(id: Int, data: D) {
+    graph.addVertex(id, data)
+    verticesView[id] = VertexViewModel(0.dp, 0.dp, Color.Gray, graph.vertices[id]!!, showVerticesLabels)
+  }
 }
