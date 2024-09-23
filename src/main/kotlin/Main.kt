@@ -30,9 +30,8 @@ val sampleGraph = DirectedGraph<String>().apply {
   addEdge(Pair(2, 3), 12)
   addEdge(Pair(3, 4), 3)
   addEdge(Pair(4, 3), 56)
-  addEdge(Pair(5, 6), null)
   addEdge(Pair(7, 8), 0)
-  addEdge(Pair(8, 9), -19)
+  addEdge(Pair(8, 9), 19)
   addEdge(Pair(9, 7), 2)
 }
 
