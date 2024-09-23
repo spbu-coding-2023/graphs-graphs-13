@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import viewmodel.graph.VertexViewModel
@@ -17,6 +18,15 @@ fun <D> VertexView(
   viewModel: VertexViewModel<D>,
   modifier: Modifier = Modifier,
 ) {
+
+  fun isColorDark(color: Color): Boolean {
+    val red = color.red
+    val green = color.green
+    val blue = color.blue
+    val brightness = (red * 299 + green * 587 + blue * 114) / 1000
+    return brightness < 0.5
+  }
+
   Box(modifier = modifier
     .size(viewModel.radius * 2, viewModel.radius * 2)
     .offset(viewModel.x, viewModel.y)
@@ -36,6 +46,7 @@ fun <D> VertexView(
         modifier = Modifier
           .align(Alignment.Center),
         text = viewModel.label,
+        color = if (isColorDark(viewModel.color)) Color.White else Color.Black
       )
     }
   }
