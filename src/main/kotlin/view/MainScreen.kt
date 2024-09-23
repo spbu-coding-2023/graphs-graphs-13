@@ -22,8 +22,16 @@ import viewmodel.graph.GraphViewModel
 
 @Composable
 fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
-  var expanded by remember { mutableStateOf(false) }
-  var showDialog by remember { mutableStateOf(false) }
+  var expandedAlgorithmsMenu by remember { mutableStateOf(false) }
+  var expandedAddMenu by remember { mutableStateOf(false) }
+  var expandedRemoveMenu by remember { mutableStateOf(false) }
+
+  var showDijkstraDialog by remember { mutableStateOf(false) }
+  var showAddEdgeDialog by remember { mutableStateOf(false) }
+  var showAddVertexDialog by remember { mutableStateOf(false) }
+  var showRemoveVertexDialog by remember { mutableStateOf(false) }
+  var showRemoveEdgeDialog by remember { mutableStateOf(false) }
+
   Row(
     horizontalArrangement = Arrangement.spacedBy(20.dp)
   ) {
@@ -50,45 +58,90 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       }
       Box {
         Row(verticalAlignment = Alignment.CenterVertically) {
-          Button(onClick = { expanded = true }) {
+          Button(onClick = { expandedAlgorithmsMenu = true }) {
             Text("Algorithm")
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Select algorithm")
           }
         }
         DropdownMenu(
-          expanded = expanded,
-          onDismissRequest = { expanded = false },
-          modifier = Modifier.background(Color.Green)
+          expanded = expandedAlgorithmsMenu,
+          onDismissRequest = { expandedAlgorithmsMenu = false },
+          modifier = Modifier.background(Color.Gray)
         ) {
           DropdownMenuItem(onClick = {
-            expanded = false
-            showDialog = true
+            expandedAlgorithmsMenu = false
+            showDijkstraDialog = true
           }) {
             Text("Dijkstra")
           }
           DropdownMenuItem(onClick = {
-            expanded = false
+            expandedAlgorithmsMenu = false
             viewModel.runKosarajuAlgorithm()
           }) {
             Text("Kosaraju")
           }
           DropdownMenuItem(onClick = {
-            expanded = false
+            expandedAlgorithmsMenu = false
             viewModel.runLouvainAlgorithm()
           }) {
             Text("Louvain")
           }
         }
       }
-    }
-    if (showDialog) {
-      DijkstraDialog(
-        onDismiss = { showDialog = false },
-        onRunAlgorithm = { start, end ->
-          viewModel.runDijkstraAlgorithm(start, end)
-          showDialog = false
+      Row {
+        Box(modifier = Modifier.padding(2.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { expandedAddMenu = true }) {
+              Text("Add")
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Add")
+            }
+          }
+          DropdownMenu(
+            expanded = expandedAddMenu,
+            onDismissRequest = { expandedAddMenu = false },
+            modifier = Modifier.background(Color.Gray)
+          ) {
+            DropdownMenuItem(onClick = {
+              expandedAddMenu = false
+              showAddVertexDialog = true
+            }) {
+              Text("Add vertex")
+            }
+            DropdownMenuItem(onClick = {
+              expandedAddMenu = false
+              showAddEdgeDialog = true
+            }) {
+              Text("Add edge")
+            }
+          }
         }
-      )
+        Box(modifier = Modifier.padding(2.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { expandedRemoveMenu = true }) {
+              Text("Remove")
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Remove")
+            }
+          }
+          DropdownMenu(
+            expanded = expandedRemoveMenu,
+            onDismissRequest = { expandedRemoveMenu = false },
+            modifier = Modifier.background(Color.Gray)
+          ) {
+            DropdownMenuItem(onClick = {
+              expandedRemoveMenu = false
+              showRemoveVertexDialog = true
+            }) {
+              Text("Remove vertex")
+            }
+            DropdownMenuItem(onClick = {
+              expandedRemoveMenu = false
+              showRemoveEdgeDialog = true
+            }) {
+              Text("Remove edge")
+            }
+          }
+        }
+      }
     }
     Box {
       var expandedThemeMenu by remember { mutableStateOf(false) }
@@ -127,7 +180,53 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       GraphView(viewModel.graphViewModel)
     }
   }
+  if (showDijkstraDialog) {
+    DijkstraDialog(
+      onDismiss = { showDijkstraDialog = false },
+      onRunAlgorithm = { start, end ->
+        viewModel.runDijkstraAlgorithm(start, end)
+        showDijkstraDialog = false
+      }
+    )
+  }
+  if (showAddVertexDialog) {
+    AddVertexDialog(
+      onDismiss = { showAddVertexDialog = false },
+      onRunAlgorithm = { id, data ->
+        viewModel.addVertex(id, data as D)
+        showAddVertexDialog = false
+      }
+    )
+  }
+  if (showRemoveVertexDialog) {
+    RemoveVertexDialog(
+      onDismiss = { showRemoveVertexDialog = false },
+      onRunAlgorithm = { id ->
+        viewModel.removeVertex(id)
+        showRemoveVertexDialog = false
+      }
+    )
+  }
+  if (showAddEdgeDialog) {
+    AddEdgeDialog(
+      onDismiss = { showAddEdgeDialog = false },
+      onRunAlgorithm = { from, to, w ->
+        viewModel.addEdge(from, to, w)
+        showAddEdgeDialog = false
+      }
+    )
+  }
+  if (showRemoveEdgeDialog) {
+    RemoveEdgeDialog(
+      onDismiss = { showRemoveEdgeDialog = false },
+      onRunAlgorithm = { from, to, w ->
+        viewModel.removeEdge(from, to, w)
+        showRemoveEdgeDialog = false
+      }
+    )
+  }
 }
+
 @Composable
 fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
   var start by remember { mutableStateOf("") }
