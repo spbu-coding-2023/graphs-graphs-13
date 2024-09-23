@@ -9,24 +9,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import model.graph.DirectedGraph
 import model.graph.Graph
 import model.graph.UndirectedGraph
 import view.MainScreen
 import viewmodel.MainScreenViewModel
 import viewmodel.graph.CircularPlacementStrategy
 
-val sampleGraph = UndirectedGraph<String>().apply {
+val sampleGraph = DirectedGraph<String>().apply {
   addVertex(1, "A")
   addVertex(2, "B")
   addVertex(3, "C")
   addVertex(4, "D")
   addVertex(5, "E")
-
-  addEdge(Pair(1, 2), 1)
-  addEdge(Pair(2, 3), 2)
+  addVertex(6, "F")
+  addVertex(7, "G")
+  addVertex(8, "H")
+  addVertex(9, "I")
+  addEdge(Pair(1, 2), 4)
+  addEdge(Pair(2, 3), 12)
   addEdge(Pair(3, 4), 3)
-  addEdge(Pair(2, 4), 4)
-  addEdge(Pair(1, 5), 5)
+  addEdge(Pair(4, 3), 56)
+  addEdge(Pair(5, 6), null)
+  addEdge(Pair(7, 8), 0)
+  addEdge(Pair(8, 9), -19)
+  addEdge(Pair(9, 7), 2)
 }
 
 @Composable
