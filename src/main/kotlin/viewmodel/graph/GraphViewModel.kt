@@ -33,4 +33,13 @@ class GraphViewModel<D>(
     graph.addVertex(id, data)
     verticesView[id] = VertexViewModel(0.dp, 0.dp, Color.Gray, graph.vertices[id]!!, showVerticesLabels)
   }
+
+  fun removeVertex(id: Int) {
+    graph.removeVertex(id)
+    verticesView.remove(id)
+    val edgesToRemove = edgesView.keys.filter { edge -> edge.vertices.first == id || edge.vertices.second == id }
+    edgesToRemove.forEach { edge ->
+      edgesView.remove(edge)
+    }
+  }
 }
