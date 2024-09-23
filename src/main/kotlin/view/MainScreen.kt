@@ -280,3 +280,55 @@ fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
     }
   )
 }
+
+@Composable
+fun AddVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, String) -> Unit) {
+  var id by remember { mutableStateOf("") }
+  var data by remember { mutableStateOf("") }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Enter id and data vertex")
+    },
+    text = {
+      Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+          value = id,
+          onValueChange = { id = it },
+          label = { Text("Enter the id:") },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+        TextField(
+          value = data,
+          onValueChange = { data = it },
+          label = { Text("Enter the data:") },
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          val idInt = id.toIntOrNull()
+
+          if (idInt != null) {
+            onRunAlgorithm(idInt, data)
+          }
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Add the vertex", color = Color(255, 250, 250))
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Cancel", color = Color(255, 250, 250))
+      }
+    }
+  )
+}
