@@ -332,3 +332,47 @@ fun AddVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, String) -> Unit
     }
   )
 }
+
+@Composable
+fun RemoveVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int) -> Unit) {
+  var id by remember { mutableStateOf("") }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Enter id vertex")
+    },
+    text = {
+      Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+          value = id,
+          onValueChange = { id = it },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          val idInt = id.toIntOrNull()
+
+          if (idInt != null) {
+            onRunAlgorithm(idInt)
+          }
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Remove the vertex", color = Color(255, 250, 250))
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Cancel", color = Color(255, 250, 250))
+      }
+    }
+  )
+}
