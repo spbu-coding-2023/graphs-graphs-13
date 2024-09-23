@@ -42,4 +42,13 @@ class GraphViewModel<D>(
       edgesView.remove(edge)
     }
   }
+
+  fun addEdge(from: Int, to: Int, w: Int?) {
+    graph.addEdge(Pair(from, to), w)
+    val fst = verticesView[from] ?: throw IllegalStateException("VertexView for vertex with id: $from not found")
+    val snd = verticesView[to] ?: throw IllegalStateException("VertexView for vertex with id: $to not found")
+    graph.edges.find { it.vertices == Pair(from, to) }?.let { edge ->
+      edgesView[edge] = EdgeViewModel(fst, snd, edge, showEdgesLabels)
+    }
+  }
 }
