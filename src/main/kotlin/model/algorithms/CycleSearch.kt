@@ -133,7 +133,7 @@ class CycleSearch<D>(private val graph: UndirectedGraph<D>) {
 
                     for (adjacency in graph.adjacency[vertex.id]!!.filter { it.key != firstAdjacency && it.key != secondAdjacency }) {
                         removedEdges.add(Edge(vertex.id to adjacency.key, adjacency.value))
-                        graph.removeEdge(vertex.id to adjacency.key, adjacency.value)
+                        graph.removeEdge(vertex.id to adjacency.key)
                     }
 
                     currentCyclePath = findAnyCycle(vertex.id)
