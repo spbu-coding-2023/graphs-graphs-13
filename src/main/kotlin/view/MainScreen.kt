@@ -219,8 +219,8 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   if (showRemoveEdgeDialog) {
     RemoveEdgeDialog(
       onDismiss = { showRemoveEdgeDialog = false },
-      onRunAlgorithm = { from, to, w ->
-        viewModel.removeEdge(from, to, w)
+      onRunAlgorithm = { from, to ->
+        viewModel.removeEdge(from, to)
         showRemoveEdgeDialog = false
       }
     )

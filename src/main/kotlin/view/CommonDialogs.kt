@@ -226,10 +226,9 @@ fun AddEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Uni
 }
 
 @Composable
-fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Unit) {
+fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
   var from by remember { mutableStateOf("") }
   var to by remember { mutableStateOf("") }
-  var w by remember { mutableStateOf<String?>(null) }
 
   AlertDialog(
     onDismissRequest = onDismiss,
@@ -252,15 +251,6 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> 
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
           modifier = Modifier.padding(bottom = 12.dp)
         )
-        TextField(
-          value = w ?: "",
-          onValueChange = { newValue ->
-            w = newValue.ifEmpty { null }
-          },
-          label = { Text("Enter the weight (optional):") },
-          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
-        )
       }
     },
     confirmButton = {
@@ -268,10 +258,9 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> 
         onClick = {
           val fromInt = from.toIntOrNull()
           val toInt = to.toIntOrNull()
-          val wInt = w?.toIntOrNull()
 
           if (fromInt != null && toInt != null) {
-            onRunAlgorithm(fromInt, toInt, wInt)
+            onRunAlgorithm(fromInt, toInt)
           }
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))

@@ -36,8 +36,8 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     graphViewModel.removeVertex(id)
   }
 
-  fun removeEdge(from: Int, to: Int, w: Int?) {
-    graphViewModel.removeEdge(from, to, w)
+  fun removeEdge(from: Int, to: Int) {
+    graphViewModel.removeEdge(from, to)
   }
 
   /** Paint the vertices of the found path.
