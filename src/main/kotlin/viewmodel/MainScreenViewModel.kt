@@ -16,12 +16,28 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
   private var algorithmRunning = false // флаг для отслеживания состояния работы алгоритма
 
   init {
-    representationStrategy.place(800.0, 600.0, graphViewModel.verticesViewValues)
+    representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
   }
 
   fun resetGraphView() {
-    representationStrategy.place(800.0, 600.0, graphViewModel.verticesViewValues)
-    graphViewModel.verticesViewValues.forEach { v -> v.color = Color.Gray }
+    representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
+    graphViewModel.verticesView.values.forEach { v -> v.color = Color.Gray }
+  }
+
+  fun addVertex(id: Int, data: D) {
+    graphViewModel.addVertex(id, data)
+  }
+
+  fun addEdge(from: Int, to: Int, w: Int?) {
+    graphViewModel.addEdge(from, to, w)
+  }
+
+  fun removeVertex(id: Int) {
+    graphViewModel.removeVertex(id)
+  }
+
+  fun removeEdge(from: Int, to: Int, w: Int?) {
+    graphViewModel.removeEdge(from, to, w)
   }
 
   /** Paint the vertices of the found path.
