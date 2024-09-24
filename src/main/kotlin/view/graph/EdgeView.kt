@@ -62,7 +62,8 @@ fun <D> EdgeView(
         x = calculateEdge().second.x.toPx(),
         y = calculateEdge().second.y.toPx()
       ),
-      color = viewModel.color
+      color = viewModel.color,
+      strokeWidth = viewModel.strokeWidth,
     )
   }
   if (viewModel.labelVisible) {

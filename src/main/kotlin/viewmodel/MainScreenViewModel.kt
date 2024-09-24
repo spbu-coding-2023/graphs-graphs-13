@@ -8,6 +8,7 @@ import viewmodel.graph.RepresentationStrategy
 import model.algorithms.*
 import model.graph.DirectedGraph
 import model.graph.UndirectedGraph
+import model.graph.Vertex
 
 var defaultColorLine: Color = Color.Black
 var defaultColorVertex: Color = Color.Gray
@@ -112,4 +113,54 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       }
     }
   }
+
+  /** Paints over the vertices and edges that belong to the found MST.
+   */
+  fun runPrimAlgorithm(): Int {
+    if (graph is DirectedGraph<D>) {
+      throw IllegalArgumentException("Prims's algorithm cannot be run on directed graphs.")
+    }
+    val prim = Prim(graph as UndirectedGraph<D>)
+    val result = prim.treePrim()
+    val weight = prim.weightPrim()
+    resetGraphView()
+    for (graphComponent in result) {
+      for (vertexId in graphComponent.vertices.keys) {
+        graphViewModel.verticesView[vertexId]?.color = Color(10, 230, 208)
+      }
+      for (edgeView in graphViewModel.edgesView) {
+        if (edgeView.key in graphComponent.edges) {
+          edgeView.value.color = Color(10, 230, 248)
+          edgeView.value.strokeWidth = 9f
+        }
+      }
+    }
+    return weight
+  }
+
+  fun runCycleSearchAlgorithm(vertexId: Int): Boolean {
+    if (vertexId !in graph.vertices.keys) {
+      throw IllegalArgumentException("Vertex with id = $vertexId doesn't exists in the graph.")
+    }
+    if (graph is DirectedGraph<D>) {
+      throw IllegalArgumentException("CycleSearch algorithm cannot be run on directed graphs.")
+    }
+    val cycleSearch = CycleSearch(graph as UndirectedGraph)
+    val result = cycleSearch.findCycle(Vertex(vertexId, graph.vertices[vertexId]!!.data))
+    resetGraphView()
+    if (result != null) {
+      for (idVertex in result.vertices.keys) {
+        graphViewModel.verticesView[idVertex]?.color = Color(10, 230, 208)
+      }
+      for (edgeView in graphViewModel.edgesView) {
+        if (edgeView.key in result.edges) {
+          edgeView.value.color = Color(10, 230, 248)
+          edgeView.value.strokeWidth = 9f
+        }
+      }
+      return false
+    }
+    return true
+  }
+
 }
