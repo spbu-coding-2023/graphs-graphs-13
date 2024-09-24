@@ -112,4 +112,27 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
       }
     }
   }
+  /** Paints over the vertices and edges that belong to the found MST.
+   */
+  fun runPrimAlgorithm(): Int {
+    if (graph is DirectedGraph<D>) {
+      throw IllegalArgumentException("Prims's algorithm cannot be run on directed graphs.")
+    }
+    val prim = Prim(graph as UndirectedGraph<D>)
+    val result = prim.treePrim()
+    val weight = prim.weightPrim()
+    resetGraphView()
+    for (graphComponent in result) {
+      for (vertexId in graphComponent.vertices.keys) {
+        graphViewModel.verticesView[vertexId]?.color = Color(10, 230, 208)
+      }
+      for (edgeView in graphViewModel.edgesView) {
+        if (edgeView.key in graphComponent.edges) {
+          edgeView.value.color = Color(10, 230, 248)
+          edgeView.value.strokeWidth = 10f
+        }
+      }
+    }
+    return weight
+  }
 }

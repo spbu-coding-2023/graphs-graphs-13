@@ -90,6 +90,12 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
           }) {
             Text("Louvain")
           }
+          DropdownMenuItem(onClick = {
+            expandedAlgorithmsMenu = false
+            viewModel.runPrimAlgorithm()
+          }) {
+            Text("Prim")
+          }
         }
       }
       Row {
