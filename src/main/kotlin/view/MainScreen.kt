@@ -39,14 +39,18 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       Row {
         Checkbox(checked = viewModel.showVerticesLabels.value, onCheckedChange = {
           viewModel.showVerticesLabels.value = it
-        })
-        Text("Show vertices data", fontSize = 20.sp, modifier = Modifier.padding(4.dp))
+        }, colors = CheckboxDefaults.colors(
+          checkedColor = Color(125, 21, 21)
+        ))
+        Text("Show vertices data", fontSize = 18.sp, modifier = Modifier.padding(10.dp))
       }
       Row {
         Checkbox(checked = viewModel.showEdgesLabels.value, onCheckedChange = {
           viewModel.showEdgesLabels.value = it
-        })
-        Text("Show edges weight", fontSize = 20.sp, modifier = Modifier.padding(4.dp))
+        }, colors = CheckboxDefaults.colors(
+          checkedColor = Color(125, 21, 21)
+        ))
+        Text("Show edges weight", fontSize = 18.sp, modifier = Modifier.padding(10.dp))
       }
       Button(
         onClick = viewModel::resetGraphView,
