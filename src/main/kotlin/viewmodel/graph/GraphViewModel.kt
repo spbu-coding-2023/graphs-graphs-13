@@ -7,6 +7,9 @@ import model.graph.Edge
 import model.graph.Graph
 import model.graph.UndirectedGraph
 import model.graph.Vertex
+import viewmodel.defaultColorLine
+import viewmodel.defaultColorVertex
+import viewmodel.defaultStrokeWidth
 
 class GraphViewModel<D>(
   private val graph: Graph<D>,
@@ -18,20 +21,20 @@ class GraphViewModel<D>(
 
   init {
     graph.getVertices().forEach { vertex ->
-      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, Color.Gray, vertex, showVerticesLabels)
+      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, vertex, showVerticesLabels)
     }
     graph.edges.forEach { edge ->
       val fst = verticesView[edge.vertices.first]
         ?: throw IllegalStateException("VertexView for vertex with id: ${edge.vertices.first} not found")
       val snd = verticesView[edge.vertices.second]
         ?: throw IllegalStateException("VertexView for vertex with id: ${edge.vertices.second} not found")
-      edgesView[edge] = EdgeViewModel(fst, snd, edge, showEdgesLabels)
+      edgesView[edge] = EdgeViewModel(fst, snd, defaultColorLine, defaultStrokeWidth, edge, showEdgesLabels)
     }
   }
 
   fun addVertex(id: Int, data: D) {
     graph.addVertex(id, data)
-    verticesView[id] = VertexViewModel(0.dp, 0.dp, Color.Gray, graph.vertices[id]!!, showVerticesLabels)
+    verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels)
   }
 
   fun removeVertex(id: Int) {
@@ -48,12 +51,12 @@ class GraphViewModel<D>(
     val fst = verticesView[from] ?: throw IllegalStateException("VertexView for vertex with id: $from not found")
     val snd = verticesView[to] ?: throw IllegalStateException("VertexView for vertex with id: $to not found")
     graph.edges.find { it.vertices == Pair(from, to) }?.let { edge ->
-      edgesView[edge] = EdgeViewModel(fst, snd, edge, showEdgesLabels)
+      edgesView[edge] = EdgeViewModel(fst, snd, defaultColorLine, defaultStrokeWidth, edge, showEdgesLabels)
     }
   }
 
-  fun removeEdge(from: Int, to: Int, w: Int?) {
-    graph.removeEdge(Pair(from, to), w)
+  fun removeEdge(from: Int, to: Int) {
+    graph.removeEdge(Pair(from, to))
     edgesView.keys.find { it.vertices == Pair(from, to) }?.let { edge ->
       edgesView.remove(edge)
     }
