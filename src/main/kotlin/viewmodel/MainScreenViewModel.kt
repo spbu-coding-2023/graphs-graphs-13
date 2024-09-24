@@ -9,11 +9,14 @@ import model.algorithms.*
 import model.graph.DirectedGraph
 import model.graph.UndirectedGraph
 
+var defaultColorLine: Color = Color.Black
+var defaultColorVertex: Color = Color.Gray
+var defaultStrokeWidth: Float = 4f
+
 class MainScreenViewModel<D>(private val graph: Graph<D>, private val representationStrategy: RepresentationStrategy) {
   val showVerticesLabels = mutableStateOf(false)
   val showEdgesLabels = mutableStateOf(false)
   val graphViewModel = GraphViewModel(graph, showVerticesLabels, showEdgesLabels)
-  private var algorithmRunning = false // флаг для отслеживания состояния работы алгоритма
 
   init {
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
@@ -21,7 +24,11 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
 
   fun resetGraphView() {
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
-    graphViewModel.verticesView.values.forEach { v -> v.color = Color.Gray }
+    graphViewModel.verticesView.values.forEach { v -> v.color = defaultColorVertex }
+    graphViewModel.edgesView.values.forEach { e ->
+      e.color = defaultColorLine
+      e.strokeWidth = defaultStrokeWidth
+    }
   }
 
   fun addVertex(id: Int, data: D) {
