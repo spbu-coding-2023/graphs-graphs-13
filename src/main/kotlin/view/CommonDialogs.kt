@@ -1,9 +1,11 @@
 package view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,14 +29,28 @@ fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
           onValueChange = { start = it },
           label = { Text("Enter the id of the starting vertex:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
         TextField(
           value = end,
           onValueChange = { end = it },
           label = { Text("Enter the id of the destination vertex:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
       }
     },
@@ -48,17 +64,17 @@ fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
             onRunAlgorithm(startInt, endInt)
           }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
       ) {
-        Text("Find the way", color = Color(255, 250, 250))
+        Text("Find the way", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {
       Button(
         onClick = onDismiss,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Cancel", color = Color(255, 250, 250))
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
       }
     }
   )
@@ -81,13 +97,27 @@ fun AddVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, String) -> Unit
           onValueChange = { id = it },
           label = { Text("Enter the id:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
         TextField(
           value = data,
           onValueChange = { data = it },
           label = { Text("Enter the data:") },
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
       }
     },
@@ -100,17 +130,17 @@ fun AddVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, String) -> Unit
             onRunAlgorithm(idInt, data)
           }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Add the vertex", color = Color(255, 250, 250))
+        Text("Add the vertex", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {
       Button(
         onClick = onDismiss,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Cancel", color = Color(255, 250, 250))
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
       }
     }
   )
@@ -131,7 +161,14 @@ fun RemoveVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int) -> Unit) {
           value = id,
           onValueChange = { id = it },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
       }
     },
@@ -144,17 +181,17 @@ fun RemoveVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int) -> Unit) {
             onRunAlgorithm(idInt)
           }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Remove the vertex", color = Color(255, 250, 250))
+        Text("Remove the vertex", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {
       Button(
         onClick = onDismiss,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Cancel", color = Color(255, 250, 250))
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
       }
     }
   )
@@ -178,14 +215,28 @@ fun AddEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Uni
           onValueChange = { from = it },
           label = { Text("Enter the start id:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
         TextField(
           value = to,
           onValueChange = { to = it },
           label = { Text("Enter the end id:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
         TextField(
           value = w ?: "",
@@ -194,7 +245,14 @@ fun AddEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Uni
           },
           label = { Text("Enter the weight (optional):") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
       }
     },
@@ -209,17 +267,17 @@ fun AddEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int, Int?) -> Uni
             onRunAlgorithm(fromInt, toInt, wInt)
           }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Add the edge", color = Color(255, 250, 250))
+        Text("Add the edge", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {
       Button(
         onClick = onDismiss,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Cancel", color = Color(255, 250, 250))
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
       }
     }
   )
@@ -242,14 +300,28 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
           onValueChange = { from = it },
           label = { Text("Enter the start id:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
         TextField(
           value = to,
           onValueChange = { to = it },
           label = { Text("Enter the end id:") },
           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-          modifier = Modifier.padding(bottom = 12.dp)
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
         )
       }
     },
@@ -263,17 +335,17 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
             onRunAlgorithm(fromInt, toInt)
           }
         },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Remove the edge", color = Color(255, 250, 250))
+        Text("Remove the edge", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {
       Button(
         onClick = onDismiss,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
       ) {
-        Text("Cancel", color = Color(255, 250, 250))
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
       }
     }
   )
