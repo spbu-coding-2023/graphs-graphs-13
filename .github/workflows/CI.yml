@@ -1,0 +1,25 @@
+name: Test # autorun of the project build and tests
+
+on: 
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**.kt'
+  push:
+    paths:
+      - '**.kt'
+jobs: 
+  test:
+    runs-on: ubuntu-latest 
+    steps: 				   
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: zulu
+      - name: Build 
+        run: ./gradlew build -x test 
+      - name: Test
+        run: ./gradlew test 
