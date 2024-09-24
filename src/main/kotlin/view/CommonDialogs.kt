@@ -65,6 +65,53 @@ fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
 }
 
 @Composable
+fun CycleSearchDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int) -> Unit) {
+  var vertexId by remember { mutableStateOf("") }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Input vertex id around that you want to find the cycle:")
+    },
+    text = {
+      Column(
+        modifier = Modifier.padding(top = 16.dp)
+      ) {
+        TextField(
+          value = vertexId,
+          onValueChange = { vertexId = it },
+          label = { Text("Your vertex id is") },
+          keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+          modifier = Modifier.padding(bottom = 12.dp)
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          val vertexIdInt = vertexId.toIntOrNull()
+
+          if (vertexIdInt != null) {
+            onRunAlgorithm(vertexIdInt)
+          }
+        },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Find the cycle", color = Color(255, 250, 250))
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(139, 0, 0))
+      ) {
+        Text("Cancel", color = Color(255, 250, 250))
+      }
+    }
+  )
+}
+
+@Composable
 fun AddVertexDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, String) -> Unit) {
   var id by remember { mutableStateOf("") }
   var data by remember { mutableStateOf("") }

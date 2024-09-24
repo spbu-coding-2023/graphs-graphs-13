@@ -27,6 +27,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   var expandedRemoveMenu by remember { mutableStateOf(false) }
 
   var showDijkstraDialog by remember { mutableStateOf(false) }
+  var showCycleSearchDialog by remember { mutableStateOf(false) }
   var showAddEdgeDialog by remember { mutableStateOf(false) }
   var showAddVertexDialog by remember { mutableStateOf(false) }
   var showRemoveVertexDialog by remember { mutableStateOf(false) }
@@ -96,6 +97,13 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
           }) {
             Text("Prim")
           }
+          DropdownMenuItem(onClick = {
+            expandedAlgorithmsMenu = false
+            showCycleSearchDialog = true
+          }) {
+            Text("CycleSearch")
+          }
+
         }
       }
       Row {
@@ -205,6 +213,15 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       onRunAlgorithm = { id, data ->
         viewModel.addVertex(id, data as D)
         showAddVertexDialog = false
+      }
+    )
+  }
+  if (showCycleSearchDialog) {
+    CycleSearchDialog(
+      onDismiss = { showCycleSearchDialog = false },
+      onRunAlgorithm = { vertexId ->
+        viewModel.runCycleSearchAlgorithm(vertexId)
+        showCycleSearchDialog = false
       }
     )
   }
