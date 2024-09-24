@@ -37,19 +37,23 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   ) {
     Column(modifier = Modifier.width(300.dp).fillMaxHeight().background(Color.Gray)) {
       Row {
-        Checkbox(checked = viewModel.showVerticesLabels.value, onCheckedChange = {
-          viewModel.showVerticesLabels.value = it
-        }, colors = CheckboxDefaults.colors(
-          checkedColor = Color(125, 21, 21)
-        ))
+        Checkbox(
+          checked = viewModel.showVerticesLabels.value, onCheckedChange = {
+            viewModel.showVerticesLabels.value = it
+          }, colors = CheckboxDefaults.colors(
+            checkedColor = Color(125, 21, 21)
+          )
+        )
         Text("Show vertices data", fontSize = 18.sp, modifier = Modifier.padding(10.dp))
       }
       Row {
-        Checkbox(checked = viewModel.showEdgesLabels.value, onCheckedChange = {
-          viewModel.showEdgesLabels.value = it
-        }, colors = CheckboxDefaults.colors(
-          checkedColor = Color(125, 21, 21)
-        ))
+        Checkbox(
+          checked = viewModel.showEdgesLabels.value, onCheckedChange = {
+            viewModel.showEdgesLabels.value = it
+          }, colors = CheckboxDefaults.colors(
+            checkedColor = Color(125, 21, 21)
+          )
+        )
         Text("Show edges weight", fontSize = 18.sp, modifier = Modifier.padding(10.dp))
       }
       Button(
