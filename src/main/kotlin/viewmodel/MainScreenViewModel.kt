@@ -48,7 +48,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     graphViewModel.removeEdge(from, to)
   }
 
-  /** Paint the vertices of the found path.
+  /** Paint the vertices and edges of the found path.
    */
   fun runDijkstraAlgorithm(start: Int, end: Int) {
     resetGraphView()
@@ -56,6 +56,12 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     val result = dijkstra.findShortestPaths(start, end)
     for (vertexId in result) {
       graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
+    }
+    for (edgeView in graphViewModel.edgesView) {
+      if (edgeView.key.vertices.first in result && edgeView.key.vertices.second in result) {
+        edgeView.value.color = Color(10, 230, 248)
+        edgeView.value.strokeWidth = 9f
+      }
     }
   }
 
