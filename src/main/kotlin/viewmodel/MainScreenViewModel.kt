@@ -37,11 +37,6 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     graphViewModel.addVertex(id, data)
   }
 
-  fun saveToNeo4j(uri: String, user: String, password: String) {
-    val neo = Neo4jRepository(uri, user, password)
-    neo.addGraph(graph)
-  }
-
   fun addEdge(from: Int, to: Int, w: Int?) {
     graphViewModel.addEdge(from, to, w)
   }
@@ -52,6 +47,11 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
 
   fun removeEdge(from: Int, to: Int) {
     graphViewModel.removeEdge(from, to)
+  }
+
+  fun saveToNeo4j(uri: String, user: String, password: String) {
+    val neo4j = Neo4jRepository(uri, user, password)
+    neo4j.addGraph(graph)
   }
 
   /** Paint the vertices and edges of the found path.
