@@ -1,16 +1,92 @@
 package view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+
+@Composable
+fun SaveToNeo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, String) -> Unit) {
+  var uri by remember { mutableStateOf("") }
+  var user by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Enter your Neo4j details")
+    },
+    text = {
+      Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+          value = uri,
+          onValueChange = { uri = it },
+          label = { Text("Uri") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+        TextField(
+          value = user,
+          onValueChange = { user = it },
+          label = { Text("User") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+        TextField(
+          value = password,
+          onValueChange = { password = it },
+          label = { Text("Password") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          onRunAlgorithm(uri, user, password)
+        },
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+      ) {
+        Text("Save graph", color = MaterialTheme.colorScheme.onPrimary)
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
+      ) {
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
+      }
+    }
+  )
+}
 
 @Composable
 fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
