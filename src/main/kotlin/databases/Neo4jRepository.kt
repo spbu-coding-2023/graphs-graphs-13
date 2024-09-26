@@ -25,14 +25,10 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     )
   }
 
-  private fun clearDatabase(transaction: Transaction) {
-    transaction.run("MATCH (n) DETACH DELETE n")
-  }
-
   fun <D> addGraph(graph: Graph<D>) {
     val transaction = session.beginTransaction()
     try {
-      clearDatabase(transaction)
+      transaction.run("MATCH (n) DETACH DELETE n")
       for ((id, data) in graph.vertices) {
         addVertex(id, data.toString(), transaction)
       }
