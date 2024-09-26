@@ -2,6 +2,7 @@ package viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import databases.Neo4jRepository
 import model.graph.Graph
 import viewmodel.graph.GraphViewModel
 import viewmodel.graph.RepresentationStrategy
@@ -34,6 +35,11 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
 
   fun addVertex(id: Int, data: D) {
     graphViewModel.addVertex(id, data)
+  }
+
+  fun saveToNeo4j(uri: String, user: String, password: String) {
+    val neo = Neo4jRepository(uri, user, password)
+    neo.addGraph(graph)
   }
 
   fun addEdge(from: Int, to: Int, w: Int?) {

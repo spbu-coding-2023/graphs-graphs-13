@@ -27,6 +27,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   var expandedAlgorithmsMenu by remember { mutableStateOf(false) }
   var expandedAddMenu by remember { mutableStateOf(false) }
   var expandedRemoveMenu by remember { mutableStateOf(false) }
+  var expandedSaveMenu by remember { mutableStateOf(false) }
 
   var showDijkstraDialog by remember { mutableStateOf(false) }
   var showCycleSearchDialog by remember { mutableStateOf(false) }
@@ -34,6 +35,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   var showAddVertexDialog by remember { mutableStateOf(false) }
   var showRemoveVertexDialog by remember { mutableStateOf(false) }
   var showRemoveEdgeDialog by remember { mutableStateOf(false) }
+  var showNeo4jDialog by remember { mutableStateOf(false) }
   Material3AppTheme(theme) {
     Row(
       horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -197,6 +199,31 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
             }
           }
         }
+        Box(modifier = Modifier.padding(2.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Button(
+              onClick = { expandedSaveMenu = true }, colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+              )
+            ) {
+              Text(text = "Save graph", color = MaterialTheme.colorScheme.onPrimary)
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Save graph")
+            }
+          }
+          DropdownMenu(
+            expanded = expandedSaveMenu,
+            onDismissRequest = { expandedSaveMenu = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+          ) {
+            DropdownMenuItem(onClick = {
+              expandedSaveMenu = false
+              showNeo4jDialog = true
+            }) {
+              Text("Save to Neo4j", color = MaterialTheme.colorScheme.onSecondary)
+            }
+          }
+        }
       }
       Box {
         var expandedThemeMenu by remember { mutableStateOf(false) }
@@ -292,6 +319,15 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
         onRunAlgorithm = { from, to ->
           viewModel.removeEdge(from, to)
           showRemoveEdgeDialog = false
+        }
+      )
+    }
+    if (showNeo4jDialog) {
+      SaveToNeo4jDialog(
+        onDismiss = { showNeo4jDialog = false },
+        onRunAlgorithm = { uri, user, password ->
+          viewModel.saveToNeo4j(uri, user, password)
+          showNeo4jDialog = false
         }
       )
     }
