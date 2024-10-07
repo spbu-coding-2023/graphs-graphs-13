@@ -51,7 +51,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
 
   fun saveToNeo4j(uri: String, user: String, password: String) {
     val neo4j = Neo4jRepository(uri, user, password)
-    neo4j.addGraph(graph)
+    neo4j.saveGraph(graph)
   }
 
   /** Paint the vertices and edges of the found path.
