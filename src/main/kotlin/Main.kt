@@ -1,45 +1,41 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import model.graph.DirectedGraph
-import model.graph.Graph
-import model.graph.UndirectedGraph
+import databases.Neo4jRepository
+import model.graph.*
 import view.MainScreen
+import view.WelcomeScreen
 import viewmodel.MainScreenViewModel
 import viewmodel.graph.CircularPlacementStrategy
-
-val sampleGraph = DirectedGraph<String>().apply {
-  addVertex(1, "A")
-  addVertex(2, "B")
-  addVertex(3, "C")
-  addVertex(4, "D")
-  addVertex(5, "E")
-  addVertex(6, "F")
-  addVertex(7, "G")
-  addVertex(8, "H")
-  addVertex(9, "I")
-  addEdge(Pair(1, 2), 4)
-  addEdge(Pair(2, 3), 12)
-  addEdge(Pair(3, 4), 3)
-  addEdge(Pair(4, 3), 56)
-  addEdge(Pair(7, 8), 0)
-  addEdge(Pair(8, 9), 19)
-  addEdge(Pair(9, 7), 2)
-}
 
 @Composable
 @Preview
 fun App() {
   MaterialTheme {
-    MainScreen(MainScreenViewModel(sampleGraph, CircularPlacementStrategy()))
+    // пока что, для удобства разработки
+    val neo4j = Neo4jRepository("bolt://localhost:7687", "neo4j", "password")
+    var graphType by remember { mutableStateOf<String?>(null) }
+    var sampleGraph by remember { mutableStateOf<Graph<*>?>(null) }
+    if (graphType == null) {
+      WelcomeScreen { selectedGraphType ->
+        graphType = selectedGraphType
+        sampleGraph = when (graphType) {
+          "Directed" -> DirectedGraph<String>()
+          "Neo4j" -> neo4j.loadGraph()
+          else -> UndirectedGraph<String>()
+        }
+      }
+    } else {
+      sampleGraph?.let {
+        MainScreen(MainScreenViewModel(it, CircularPlacementStrategy()))
+      }
+    }
   }
 }
 
