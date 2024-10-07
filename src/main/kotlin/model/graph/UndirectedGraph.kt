@@ -1,6 +1,6 @@
 package model.graph
 
-class UndirectedGraph<D>() : Graph<D>() {
+class UndirectedGraph() : Graph() {
   override fun addEdge(v: Pair<Int, Int>, w: Int?) {
     // добавить проверку на повторку ребра
     if (!vertices.containsKey(v.first)) {

@@ -15,7 +15,7 @@ var defaultColorLine: Color = Color.Black
 var defaultColorVertex: Color = Color.Gray
 var defaultStrokeWidth: Float = 4f
 
-class MainScreenViewModel<D>(private val graph: Graph<D>, private val representationStrategy: RepresentationStrategy) {
+class MainScreenViewModel(private val graph: Graph, private val representationStrategy: RepresentationStrategy) {
   val showVerticesLabels = mutableStateOf(false)
   val showEdgesLabels = mutableStateOf(false)
   val graphViewModel = GraphViewModel(graph, showVerticesLabels, showEdgesLabels)
@@ -33,7 +33,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     }
   }
 
-  fun addVertex(id: Int, data: D) {
+  fun addVertex(id: Int, data: String) {
     graphViewModel.addVertex(id, data)
   }
 
@@ -129,10 +129,10 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
   /** Paints over the vertices and edges that belong to the found MST.
    */
   fun runPrimAlgorithm(): Int {
-    if (graph is DirectedGraph<D>) {
+    if (graph is DirectedGraph) {
       throw IllegalArgumentException("Prims's algorithm cannot be run on directed graphs.")
     }
-    val prim = Prim(graph as UndirectedGraph<D>)
+    val prim = Prim(graph as UndirectedGraph)
     val result = prim.treePrim()
     val weight = prim.weightPrim()
     resetGraphView()
@@ -154,7 +154,7 @@ class MainScreenViewModel<D>(private val graph: Graph<D>, private val representa
     if (vertexId !in graph.vertices.keys) {
       throw IllegalArgumentException("Vertex with id = $vertexId doesn't exists in the graph.")
     }
-    if (graph is DirectedGraph<D>) {
+    if (graph is DirectedGraph) {
       throw IllegalArgumentException("CycleSearch algorithm cannot be run on directed graphs.")
     }
     val cycleSearch = CycleSearch(graph as UndirectedGraph)

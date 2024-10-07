@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
 class KosarajuTest {
-  private val dirGraph = DirectedGraph<String>()
+  private val dirGraph = DirectedGraph()
   private val scc = Kosaraju(dirGraph)
 
   @Test

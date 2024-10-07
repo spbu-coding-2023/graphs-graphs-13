@@ -7,6 +7,7 @@ import org.neo4j.driver.*
 import java.io.Closeable
 
 class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
+  // bolt://localhost:7687
   private val driver: Driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
   private val session: Session = driver.session()
 
@@ -25,12 +26,12 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     )
   }
 
-  fun <D> saveGraph(graph: Graph<D>) {
+  fun saveGraph(graph: Graph) {
     val transaction = session.beginTransaction()
     try {
       transaction.run("MATCH (n) DETACH DELETE n")
-      for ((id, data) in graph.vertices) {
-        addVertex(id, data.toString(), transaction)
+      for ((id, vertex) in graph.vertices) {
+        addVertex(id, vertex.data, transaction)
       }
       for (edge in graph.edges) {
         addEdge(edge.vertices, edge.weight, transaction)
@@ -44,8 +45,8 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     }
   }
 
-  fun loadGraph(): Graph<String> {
-    val graph = DirectedGraph<String>()
+  fun loadGraph() : Graph {
+    val graph = DirectedGraph()
     val transaction = session.beginTransaction()
     try {
       val verticesResult = transaction.run("MATCH (v:Vertex) RETURN v.id AS id, v.data AS data")
@@ -55,10 +56,8 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
         val data = record.get("data").asString()
         graph.addVertex(id, data)
       }
-      val edgesResult = transaction.run(
-        "MATCH (v1:Vertex)-[r:EDGE]->(v2:Vertex) " +
-                "RETURN v1.id AS id1, v2.id AS id2, r.weight AS weight"
-      )
+      val edgesResult = transaction.run("MATCH (v1:Vertex)-[r:EDGE]->(v2:Vertex) " +
+              "RETURN v1.id AS id1, v2.id AS id2, r.weight AS weight")
       while (edgesResult.hasNext()) {
         val record = edgesResult.next()
         val id1 = record.get("id1").asInt()

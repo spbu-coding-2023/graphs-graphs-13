@@ -11,7 +11,7 @@ import java.util.PriorityQueue
  * @property previousVertices Stores previous vertices along the shortest path to each vertex.
  * @property queue Queue for processing vertices in order of increasing distances.
  */
-class Dijkstra<D>(private val graph: Graph<D>) {
+class Dijkstra(private val graph: Graph) {
   private val distances = hashMapOf<Int, Int>()
   private val previousVertices = hashMapOf<Int, Int?>()
   private val queue = PriorityQueue<Pair<Int, Int>>(compareBy { it.second })

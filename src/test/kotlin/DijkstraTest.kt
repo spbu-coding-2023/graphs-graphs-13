@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.assertFailsWith
 
 class DijkstraTest {
-  private val dirGraph = DirectedGraph<String>()
-  private val undirGraph = UndirectedGraph<String>()
+  private val dirGraph = DirectedGraph()
+  private val undirGraph = UndirectedGraph()
   private val shortestPathDirected = Dijkstra(dirGraph)
   private val shortestPathUndirected = Dijkstra(undirGraph)
 

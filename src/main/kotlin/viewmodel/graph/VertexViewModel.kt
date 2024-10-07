@@ -9,11 +9,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.graph.Vertex
 
-class VertexViewModel<D>(
+class VertexViewModel(
   x: Dp = 0.dp,
   y: Dp = 0.dp,
   color: Color,
-  private val v: Vertex<D>,
+  private val v: Vertex,
   private val _labelVisible: State<Boolean>,
   val radius: Dp = 25.dp
 ) {

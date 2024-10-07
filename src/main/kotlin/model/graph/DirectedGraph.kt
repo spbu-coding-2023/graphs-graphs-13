@@ -1,6 +1,6 @@
 package model.graph
 
-class DirectedGraph<D>() : Graph<D>() {
+class DirectedGraph() : Graph() {
   override fun addEdge(v: Pair<Int, Int>, w: Int?) {
     // добавить проверку на повторку ребра
     if (!vertices.containsKey(v.first)) {

@@ -4,12 +4,12 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import model.graph.Edge
 
-class EdgeViewModel<D>(
-  val u: VertexViewModel<D>,
-  val v: VertexViewModel<D>,
+class EdgeViewModel(
+  val u: VertexViewModel,
+  val v: VertexViewModel,
   var color: Color,
   var strokeWidth: Float,
-  private val e: Edge<D>,
+  private val e: Edge,
   private val _labelVisible: State<Boolean>,
 ) {
   val label

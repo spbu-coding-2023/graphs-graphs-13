@@ -11,13 +11,13 @@ import viewmodel.defaultColorLine
 import viewmodel.defaultColorVertex
 import viewmodel.defaultStrokeWidth
 
-class GraphViewModel<D>(
-  private val graph: Graph<D>,
+class GraphViewModel(
+  private val graph: Graph,
   private val showVerticesLabels: State<Boolean>,
   private val showEdgesLabels: State<Boolean>,
 ) {
-  internal val verticesView: HashMap<Int, VertexViewModel<D>> = hashMapOf()
-  internal val edgesView: HashMap<Edge<D>, EdgeViewModel<D>> = hashMapOf()
+  internal val verticesView: HashMap<Int, VertexViewModel> = hashMapOf()
+  internal val edgesView: HashMap<Edge, EdgeViewModel> = hashMapOf()
 
   init {
     graph.getVertices().forEach { vertex ->
@@ -32,7 +32,7 @@ class GraphViewModel<D>(
     }
   }
 
-  fun addVertex(id: Int, data: D) {
+  fun addVertex(id: Int, data: String) {
     graph.addVertex(id, data)
     verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels)
   }
