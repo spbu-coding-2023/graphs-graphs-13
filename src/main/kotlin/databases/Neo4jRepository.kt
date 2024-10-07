@@ -25,7 +25,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     )
   }
 
-  fun <D> addGraph(graph: Graph<D>) {
+  fun <D> saveGraph(graph: Graph<D>) {
     val transaction = session.beginTransaction()
     try {
       transaction.run("MATCH (n) DETACH DELETE n")
@@ -42,6 +42,38 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     } finally {
       transaction.close()
     }
+  }
+
+  fun loadGraph(): Graph<String> {
+    val graph = DirectedGraph<String>()
+    val transaction = session.beginTransaction()
+    try {
+      val verticesResult = transaction.run("MATCH (v:Vertex) RETURN v.id AS id, v.data AS data")
+      while (verticesResult.hasNext()) {
+        val record = verticesResult.next()
+        val id = record.get("id").asInt()
+        val data = record.get("data").asString()
+        graph.addVertex(id, data)
+      }
+      val edgesResult = transaction.run(
+        "MATCH (v1:Vertex)-[r:EDGE]->(v2:Vertex) " +
+                "RETURN v1.id AS id1, v2.id AS id2, r.weight AS weight"
+      )
+      while (edgesResult.hasNext()) {
+        val record = edgesResult.next()
+        val id1 = record.get("id1").asInt()
+        val id2 = record.get("id2").asInt()
+        val weight = if (record.containsKey("weight")) record.get("weight").asInt() else null
+        graph.addEdge(Pair(id1, id2), weight)
+      }
+      transaction.commit()
+    } catch (e: Exception) {
+      transaction.rollback()
+      throw e
+    } finally {
+      transaction.close()
+    }
+    return graph
   }
 
   override fun close() {
