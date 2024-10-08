@@ -21,18 +21,18 @@ fun App() {
     // пока что, для удобства разработки
     val neo4j = Neo4jRepository("bolt://localhost:7687", "neo4j", "password")
     var graphType by remember { mutableStateOf<String?>(null) }
-    var sampleGraph by remember { mutableStateOf<Graph?>(null) }
+    var graph by remember { mutableStateOf<Graph?>(null) }
     if (graphType == null) {
       WelcomeScreen { selectedGraphType ->
         graphType = selectedGraphType
-        sampleGraph = when (graphType) {
+        graph = when (graphType) {
           "Directed" -> DirectedGraph()
-          "Neo4j" -> neo4j.loadGraph()
-          else -> UndirectedGraph()
+          "Undirected" -> UndirectedGraph()
+          else -> neo4j.loadGraph()
         }
       }
     } else {
-      sampleGraph?.let {
+      graph?.let {
         MainScreen(MainScreenViewModel(it, CircularPlacementStrategy()))
       }
     }
