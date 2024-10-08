@@ -152,9 +152,7 @@ class Prim(private val graph: UndirectedGraph) {
         for (element in treePrim()) {
             for (edge in element.edges) {
 
-                if (edge.weight == null) {
-                    throw IllegalArgumentException("Each edge of a weighted graph must have a weight: the edge with weight = 'null' isn't correct")
-                } else {
+                if (edge.weight != null) {
                     treeWeight += edge.weight!!
                 }
 

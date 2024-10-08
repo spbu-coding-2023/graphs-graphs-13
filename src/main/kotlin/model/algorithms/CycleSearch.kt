@@ -114,10 +114,6 @@ class CycleSearch(private val graph: UndirectedGraph) {
         var returnCyclePath = hashMapOf<Int, Int>()
         var currentCyclePath: HashMap<Int, Int>?
         var minCycleSize: Int = Int.MAX_VALUE
-
-        if (vertex.id !in graph.vertices.keys) {
-            throw IllegalArgumentException("Vertex with id = ${vertex.id} doesn't exist in the graph")
-        }
         val returnGraph = UndirectedGraph()
         if (graph.adjacency[vertex.id]!!.size < 2) {
             return null

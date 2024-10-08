@@ -2,6 +2,7 @@ package viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import databases.FileSystem
 import databases.Neo4jRepository
 import model.graph.Graph
 import viewmodel.graph.GraphViewModel
@@ -52,6 +53,10 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
   fun saveToNeo4j(uri: String, user: String, password: String) {
     val neo4j = Neo4jRepository(uri, user, password)
     neo4j.saveGraph(graph)
+  }
+  fun saveToFile(): String? {
+    val fileSystem = FileSystem()
+    return fileSystem.saveGraph(graph)
   }
 
   /** Paint the vertices and edges of the found path.
@@ -128,9 +133,14 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
 
   /** Paints over the vertices and edges that belong to the found MST.
    */
-  fun runPrimAlgorithm(): Int {
+  fun runPrimAlgorithm(): String? {
     if (graph is DirectedGraph) {
-      throw IllegalArgumentException("Prims's algorithm cannot be run on directed graphs.")
+      return "Prims's algorithm cannot be run on directed graphs."
+    }
+    for(edge in graph.edges) {
+      if(edge.weight == null) {
+        return "Each edge of graph for Prim's algorithm must have a weight:\nthe edge with weight = 'null' is incorrect."
+      }
     }
     val prim = Prim(graph as UndirectedGraph)
     val result = prim.treePrim()
@@ -147,15 +157,16 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
         }
       }
     }
-    return weight
+    return null
   }
 
-  fun runCycleSearchAlgorithm(vertexId: Int): Boolean {
-    if (vertexId !in graph.vertices.keys) {
-      throw IllegalArgumentException("Vertex with id = $vertexId doesn't exists in the graph.")
-    }
+  fun runCycleSearchAlgorithm(vertexId: Int): String? {
+
     if (graph is DirectedGraph) {
-      throw IllegalArgumentException("CycleSearch algorithm cannot be run on directed graphs.")
+      return "CycleSearch algorithm can't be run on directed graphs."
+    }
+    if (vertexId !in graph.vertices.keys) {
+      return "Vertex with id = $vertexId doesn't exists in the graph."
     }
     val cycleSearch = CycleSearch(graph as UndirectedGraph)
     val result = cycleSearch.findCycle(Vertex(vertexId, graph.vertices[vertexId]!!.data))
@@ -170,9 +181,9 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
           edgeView.value.strokeWidth = 9f
         }
       }
-      return false
+      return null
     }
-    return true
+    return "The vertex with id = $vertexId doesn't have a cycle around it. "
   }
 
 }

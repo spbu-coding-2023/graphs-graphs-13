@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import model.graph.Graph
 import androidx.compose.material3.MaterialTheme
+import databases.FileSystem
 import org.jetbrains.skia.impl.Stats.enabled
 import view.graph.GraphView
 import viewmodel.MainScreenViewModel
@@ -36,6 +37,15 @@ fun MainScreen(viewModel: MainScreenViewModel) {
   var showRemoveVertexDialog by remember { mutableStateOf(false) }
   var showRemoveEdgeDialog by remember { mutableStateOf(false) }
   var showNeo4jDialog by remember { mutableStateOf(false) }
+  var showErrorDialog by remember { mutableStateOf(false) }
+  var errorMessage: String? = null
+  fun catchError(messageOfError: String? ) {
+    if(messageOfError != null ) {
+      errorMessage = messageOfError
+      showErrorDialog = true
+    }
+  }
+
   Material3AppTheme(theme) {
     Row(
       horizontalArrangement = Arrangement.spacedBy(20.dp)
@@ -123,7 +133,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
-              viewModel.runPrimAlgorithm()
+              catchError(viewModel.runPrimAlgorithm())
             }) {
               Text("Prim")
             }
@@ -222,6 +232,12 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }) {
               Text("Save to Neo4j", color = MaterialTheme.colorScheme.onSecondary)
             }
+            DropdownMenuItem(onClick = {
+              expandedSaveMenu = false
+              catchError(viewModel.saveToFile())
+            }) {
+              Text("Save to json-file", color = MaterialTheme.colorScheme.onSecondary)
+            }
           }
         }
       }
@@ -290,7 +306,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       CycleSearchDialog(
         onDismiss = { showCycleSearchDialog = false },
         onRunAlgorithm = { vertexId ->
-          viewModel.runCycleSearchAlgorithm(vertexId)
+          catchError(viewModel.runCycleSearchAlgorithm(vertexId))
           showCycleSearchDialog = false
         }
       )
@@ -329,6 +345,12 @@ fun MainScreen(viewModel: MainScreenViewModel) {
           viewModel.saveToNeo4j(uri, user, password)
           showNeo4jDialog = false
         }
+      )
+    }
+    if (showErrorDialog) {
+      ErrorDialog(
+        onDismiss = { showErrorDialog = false },
+        errorMessage!!
       )
     }
   }
