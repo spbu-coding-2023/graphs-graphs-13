@@ -24,6 +24,9 @@ fun WelcomeScreen(selectType: (String) -> Unit) {
       Button(onClick = { selectType("Neo4j") }) {
         Text("Load Neo4j graph")
       }
+      Button(onClick = { selectType("File") }) {
+        Text("Open graph from file")
+      }
     }
   }
 }

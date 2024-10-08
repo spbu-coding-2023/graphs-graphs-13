@@ -473,3 +473,18 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
     }
   )
 }
+
+@Composable
+fun ErrorDialog(onDismiss: () -> Unit, errorMessage: String) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text("Error:") },
+    text = { Text(errorMessage) },
+    confirmButton = {
+      Button(onClick = onDismiss) {
+        Text("ОК")
+      }
+    }
+  )
+
+}
