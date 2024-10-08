@@ -22,7 +22,7 @@ import viewmodel.graph.CircularPlacementStrategy
 import viewmodel.graph.GraphViewModel
 
 @Composable
-fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
+fun MainScreen(viewModel: MainScreenViewModel) {
   var theme by remember { mutableStateOf(Theme.NASTYA) }
   var expandedAlgorithmsMenu by remember { mutableStateOf(false) }
   var expandedAddMenu by remember { mutableStateOf(false) }
@@ -281,7 +281,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       AddVertexDialog(
         onDismiss = { showAddVertexDialog = false },
         onRunAlgorithm = { id, data ->
-          viewModel.addVertex(id, data as D)
+          viewModel.addVertex(id, data)
           showAddVertexDialog = false
         }
       )

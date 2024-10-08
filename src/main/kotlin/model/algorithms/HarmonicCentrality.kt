@@ -19,13 +19,12 @@ import kotlin.math.roundToInt
  *     for i in 1..n-1, where 'n' is amount of graph vertices.
  * In this case the length of the path is the amount of edges of this path.
  *
- * @param D input type
  * @property [graph] a graph (of any kind) for the vertices of which it is necessary to calculate the centrality index
  * @constructor Creates a graph, based on [graph], for which the algorithm for calculating the
  * normalized harmonic centrality can be applied.
  */
 
-class HarmonicCentrality<D>(private val graph: Graph<D>) {
+class HarmonicCentrality(private val graph: Graph) {
 
     /**
      * This auxiliary function for the function [getIndex], that rounds
@@ -47,7 +46,7 @@ class HarmonicCentrality<D>(private val graph: Graph<D>) {
      * @return centrality index of vertex with id = [vertexId]
      * @receiver [harmonicCentrality]
      */
-    private fun getIndex(graph: Graph<D>, vertexId: Int): Double {
+    private fun getIndex(graph: Graph, vertexId: Int): Double {
 
         var index = 0.00
 
@@ -71,7 +70,7 @@ class HarmonicCentrality<D>(private val graph: Graph<D>) {
 
         val centralityIndexes = HashMap<Int, Double>()
 
-        val graphForCentrality: Graph<D> = if (graph is UndirectedGraph) {
+        val graphForCentrality: Graph = if (graph is UndirectedGraph) {
             UndirectedGraph()
         } else {
             DirectedGraph()

@@ -8,8 +8,8 @@ import kotlin.test.assertEquals
 
 class HarmonicCentralityTest {
 
-    private var undirGraph = UndirectedGraph<Int>()
-    private var dirGraph = DirectedGraph<Int>()
+    private var undirGraph = UndirectedGraph()
+    private var dirGraph = DirectedGraph()
     private var undirCentrality = HarmonicCentrality(undirGraph)
     private var dirCentrality = HarmonicCentrality(dirGraph)
     private fun roundTo(number: Double): Double {

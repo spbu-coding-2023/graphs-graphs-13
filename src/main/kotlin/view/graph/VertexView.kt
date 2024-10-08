@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import viewmodel.graph.VertexViewModel
 
 @Composable
-fun <D> VertexView(
-  viewModel: VertexViewModel<D>,
+fun VertexView(
+  viewModel: VertexViewModel,
   modifier: Modifier = Modifier,
 ) {
 
