@@ -25,7 +25,9 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     )
   }
 
-  fun saveGraph(graph: Graph) {
+  /** Saves the graph in Neo4j, in case of an error, returns a
+   *  string with error information, otherwise null */
+  fun saveGraph(graph: Graph): String? {
     val typeGraph = if (graph is DirectedGraph) "DIRECTED" else "UNDIRECTED"
     val transaction = session.beginTransaction()
     try {
@@ -38,14 +40,19 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
       }
       transaction.run("CREATE (g:Graph {type: '${typeGraph}'})")
       transaction.commit()
+      return null
     } catch (e: Exception) {
       transaction.rollback()
-      throw e
+      return "Failed to save graph (transaction error)"
     } finally {
       transaction.close()
     }
   }
 
+  /** The function loads the graph from neo4j, if unsuccessful, returns an error message.
+   * @return pair graph (Graph?) and error string (String?), if loading is successful,
+   * returns graph and null string, if error returns null graph and error string
+   */
   fun loadGraph(): Pair<Graph?, String?> {
     val graph: Graph
     val transaction = session.beginTransaction()
@@ -81,13 +88,13 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
         graph.addEdge(Pair(id1, id2), weight)
       }
       transaction.commit()
+      return (graph to null)
     } catch (e: Exception) {
       transaction.rollback()
-      throw e
+      return null to "Failed to load graph (transaction error)"
     } finally {
       transaction.close()
     }
-    return (graph to null)
   }
 
   override fun close() {
