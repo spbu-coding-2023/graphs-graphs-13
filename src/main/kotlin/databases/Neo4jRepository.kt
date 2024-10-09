@@ -7,7 +7,6 @@ import org.neo4j.driver.*
 import java.io.Closeable
 
 class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
-  // bolt://localhost:7687
   private val driver: Driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password))
   private val session: Session = driver.session()
 
@@ -61,7 +60,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
       graph = when (graphType) {
         "DIRECTED" -> DirectedGraph()
         "UNDIRECTED" -> UndirectedGraph()
-         else -> return (null to "Unknown graph type: $graphType")
+        else -> return (null to "Unknown graph type: $graphType")
       }
       val verticesResult = transaction.run("MATCH (v:Vertex) RETURN v.id AS id, v.data AS data")
       while (verticesResult.hasNext()) {
