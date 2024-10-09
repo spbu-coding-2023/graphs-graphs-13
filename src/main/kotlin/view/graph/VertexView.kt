@@ -54,7 +54,7 @@ fun VertexView(
         modifier = Modifier
           .align(Alignment.Center).offset(0.dp, -viewModel.radius - 10.dp),
         text = viewModel.id,
-        color = if (isColorDark(viewModel.color)) Color.White else Color.Black
+        color = Color.Black
       )
     }
   }
