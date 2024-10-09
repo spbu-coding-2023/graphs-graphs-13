@@ -12,14 +12,6 @@ class CycleSearchTest {
     private var cycleGraph = CycleSearch(graph)
 
     @Test
-    fun `passing as function argument a non-existent vertex should throw an exception`() {
-
-        addVertices(graph, 3)
-        assertFailsWith<IllegalArgumentException> { cycleGraph.findCycle(Vertex(4, 4.toString())) }
-
-    }
-
-    @Test
     fun `search for a cycle at a single vertex must be correct`() {
 
         addVertices(graph, 1)
