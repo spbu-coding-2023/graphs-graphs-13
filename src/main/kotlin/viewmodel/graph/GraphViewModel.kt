@@ -14,6 +14,7 @@ import viewmodel.defaultStrokeWidth
 class GraphViewModel(
   private val graph: Graph,
   private val showVerticesLabels: State<Boolean>,
+  private val showVerticesId: State<Boolean>,
   private val showEdgesLabels: State<Boolean>,
 ) {
   internal val verticesView: HashMap<Int, VertexViewModel> = hashMapOf()
@@ -21,7 +22,7 @@ class GraphViewModel(
 
   init {
     graph.getVertices().forEach { vertex ->
-      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, vertex, showVerticesLabels)
+      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, vertex, showVerticesLabels, showVerticesId)
     }
     graph.edges.forEach { edge ->
       val fst = verticesView[edge.vertices.first]
@@ -35,7 +36,7 @@ class GraphViewModel(
   fun addVertex(id: Int, data: String): String? {
     val addedResult = graph.addVertex(id, data)
     if (addedResult != null) return addedResult
-    verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels)
+    verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels, showVerticesId)
     return null
   }
 

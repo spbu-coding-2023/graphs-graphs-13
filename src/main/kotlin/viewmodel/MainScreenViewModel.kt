@@ -18,8 +18,9 @@ var defaultStrokeWidth: Float = 4f
 
 class MainScreenViewModel(private val graph: Graph, private val representationStrategy: RepresentationStrategy) {
   val showVerticesLabels = mutableStateOf(false)
+  val showVerticesId = mutableStateOf(false)
   val showEdgesLabels = mutableStateOf(false)
-  val graphViewModel = GraphViewModel(graph, showVerticesLabels, showEdgesLabels)
+  val graphViewModel = GraphViewModel(graph, showVerticesLabels, showVerticesId, showEdgesLabels)
 
   init {
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)

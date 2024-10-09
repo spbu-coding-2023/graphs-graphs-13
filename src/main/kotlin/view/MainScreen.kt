@@ -68,6 +68,21 @@ fun MainScreen(viewModel: MainScreenViewModel) {
         }
         Row {
           Checkbox(
+            checked = viewModel.showVerticesId.value, onCheckedChange = {
+              viewModel.showVerticesId.value = it
+            }, colors = CheckboxDefaults.colors(
+              checkedColor = MaterialTheme.colorScheme.primary
+            )
+          )
+          Text(
+            text = "Show vertices id",
+            fontSize = 18.sp,
+            modifier = Modifier.padding(10.dp),
+            color = MaterialTheme.colorScheme.onSurface
+          )
+        }
+        Row {
+          Checkbox(
             checked = viewModel.showEdgesLabels.value, onCheckedChange = {
               viewModel.showEdgesLabels.value = it
             }, colors = CheckboxDefaults.colors(
