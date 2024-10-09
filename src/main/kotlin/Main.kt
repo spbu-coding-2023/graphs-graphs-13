@@ -12,6 +12,7 @@ import databases.Neo4jRepository
 import model.graph.*
 import view.ErrorDialog
 import view.MainScreen
+import view.Neo4jDialog
 import view.WelcomeScreen
 import viewmodel.MainScreenViewModel
 import viewmodel.graph.CircularPlacementStrategy
@@ -20,12 +21,11 @@ import viewmodel.graph.CircularPlacementStrategy
 @Preview
 fun App() {
   MaterialTheme {
-    // пока что, для удобства разработки
-    val neo4j = Neo4jRepository("bolt://localhost:7687", "neo4j", "password")
     val fileSystem = FileSystem()
     var graphType by remember { mutableStateOf<String?>(null) }
     var graph by remember { mutableStateOf<Graph?>(null) }
     var showErrorDialog by remember { mutableStateOf(false) }
+    var showNeo4jDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     fun catchErrorOrGetGraph(result: Pair<Graph?, String?>) {
       if (result.second == null) {
@@ -42,7 +42,7 @@ fun App() {
         when (graphType) {
           "Directed" -> graph = DirectedGraph()
           "Undirected" -> graph = UndirectedGraph()
-          "Neo4j" -> catchErrorOrGetGraph(neo4j.loadGraph())
+          "Neo4j" -> showNeo4jDialog = true
           else -> catchErrorOrGetGraph(fileSystem.openGraph())
         }
       }
@@ -55,6 +55,16 @@ fun App() {
       ErrorDialog(
         onDismiss = { showErrorDialog = false },
         errorMessage!!
+      )
+    }
+    if (showNeo4jDialog) {
+      Neo4jDialog(
+        onDismiss = { showNeo4jDialog = false },
+        onRunAlgorithm = { uri, user, password ->
+          val neo4j = Neo4jRepository(uri, user, password)
+          catchErrorOrGetGraph(neo4j.loadGraph())
+          showNeo4jDialog = false
+        }
       )
     }
   }

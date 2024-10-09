@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SaveToNeo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, String) -> Unit) {
+fun Neo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, String) -> Unit) {
   var uri by remember { mutableStateOf("") }
   var user by remember { mutableStateOf("") }
   var password by remember { mutableStateOf("") }
@@ -74,7 +74,7 @@ fun SaveToNeo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, St
         },
         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
       ) {
-        Text("Save graph", color = MaterialTheme.colorScheme.onPrimary)
+        Text("Ok", color = MaterialTheme.colorScheme.onPrimary)
       }
     },
     dismissButton = {

@@ -339,7 +339,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       )
     }
     if (showNeo4jDialog) {
-      SaveToNeo4jDialog(
+      Neo4jDialog(
         onDismiss = { showNeo4jDialog = false },
         onRunAlgorithm = { uri, user, password ->
           catchError(viewModel.saveToNeo4j(uri, user, password))
