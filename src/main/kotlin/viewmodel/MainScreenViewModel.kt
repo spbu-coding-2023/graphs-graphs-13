@@ -71,11 +71,9 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
     for (vertexId in result.first!!) {
       graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
     }
-    for (edgeView in graphViewModel.edgesView) {
-      if (edgeView.key.vertices.first in result.first!! && edgeView.key.vertices.second in result.first!!) {
-        edgeView.value.color = Color(10, 230, 248)
-        edgeView.value.strokeWidth = 9f
-      }
+    for (i in 1 until result.first!!.size) {
+      val a = graphViewModel.edgesView.keys.find {it.vertices == Pair(result.first!![i-1], result.first!![i]) }
+      graphViewModel.edgesView[a]!!.color  = Color(86, 29, 39)
     }
     return null
   }
