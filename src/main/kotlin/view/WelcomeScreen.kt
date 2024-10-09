@@ -22,7 +22,7 @@ fun WelcomeScreen(selectType: (String) -> Unit) {
         Text("Select Directed graph")
       }
       Button(onClick = { selectType("Neo4j") }) {
-        Text("Load Neo4j graph")
+        Text("Open graph from Neo4j")
       }
       Button(onClick = { selectType("File") }) {
         Text("Open graph from json-file")
