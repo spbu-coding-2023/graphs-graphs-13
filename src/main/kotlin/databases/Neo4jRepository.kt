@@ -27,6 +27,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
   }
 
   fun saveGraph(graph: Graph) {
+    val typeGraph = if (graph is DirectedGraph) "DIRECTED" else "UNDIRECTED"
     val transaction = session.beginTransaction()
     try {
       transaction.run("MATCH (n) DETACH DELETE n")
@@ -36,6 +37,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
       for (edge in graph.edges) {
         addEdge(edge.vertices, edge.weight, transaction)
       }
+      transaction.run("CREATE (g:Graph {type: '${typeGraph}'})")
       transaction.commit()
     } catch (e: Exception) {
       transaction.rollback()
@@ -45,10 +47,22 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     }
   }
 
-  fun loadGraph() : Graph {
-    val graph = DirectedGraph()
+  fun loadGraph(): Graph {
+    val graph: Graph
     val transaction = session.beginTransaction()
     try {
+      val graphTypeResult = transaction.run("MATCH (g:Graph) RETURN g.type AS type LIMIT 1")
+      val graphType = if (graphTypeResult.hasNext()) {
+        val record = graphTypeResult.next()
+        record.get("type").asString()
+      } else {
+        throw Exception("Graph type not found in the database")
+      }
+      graph = when (graphType) {
+        "DIRECTED" -> DirectedGraph()
+        "UNDIRECTED" -> UndirectedGraph()
+        else -> throw Exception("Unknown graph type: $graphType")
+      }
       val verticesResult = transaction.run("MATCH (v:Vertex) RETURN v.id AS id, v.data AS data")
       while (verticesResult.hasNext()) {
         val record = verticesResult.next()
@@ -56,8 +70,10 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
         val data = record.get("data").asString()
         graph.addVertex(id, data)
       }
-      val edgesResult = transaction.run("MATCH (v1:Vertex)-[r:EDGE]->(v2:Vertex) " +
-              "RETURN v1.id AS id1, v2.id AS id2, r.weight AS weight")
+      val edgesResult = transaction.run(
+        "MATCH (v1:Vertex)-[r:EDGE]->(v2:Vertex) " +
+                "RETURN v1.id AS id1, v2.id AS id2, r.weight AS weight"
+      )
       while (edgesResult.hasNext()) {
         val record = edgesResult.next()
         val id1 = record.get("id1").asInt()
