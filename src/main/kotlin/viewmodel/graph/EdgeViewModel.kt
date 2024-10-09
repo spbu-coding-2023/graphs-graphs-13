@@ -13,7 +13,7 @@ class EdgeViewModel(
   private val _labelVisible: State<Boolean>,
 ) {
   val label
-    get() = e.weight.toString()
+    get() = e.weight?.toString() ?: ""
 
   val labelVisible
     get() = _labelVisible.value
