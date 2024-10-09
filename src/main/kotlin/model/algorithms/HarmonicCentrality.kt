@@ -52,8 +52,8 @@ class HarmonicCentrality(private val graph: Graph) {
 
         graph.vertices.filter { it.key != vertexId }
             .forEach {
-                if (Dijkstra(graph).findShortestPaths(vertexId, it.key).isNotEmpty()) {
-                    index += 1.0 / ((Dijkstra(graph).findShortestPaths(vertexId, it.key)).size - 1)
+                if (Dijkstra(graph).findShortestPaths(vertexId, it.key).first!!.isNotEmpty()) {
+                    index += 1.0 / ((Dijkstra(graph).findShortestPaths(vertexId, it.key)).first!!.size - 1)
                 }
             }
 

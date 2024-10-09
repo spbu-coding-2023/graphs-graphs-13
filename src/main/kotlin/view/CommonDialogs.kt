@@ -478,11 +478,14 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
 fun ErrorDialog(onDismiss: () -> Unit, errorMessage: String) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text("Error:") },
-    text = { Text(errorMessage) },
+    title = { Text(text = "Error:", color = MaterialTheme.colorScheme.onErrorContainer) },
+    text = { Text(text = errorMessage, color = MaterialTheme.colorScheme.onErrorContainer) },
     confirmButton = {
-      Button(onClick = onDismiss) {
-        Text("ОК")
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.errorContainer)
+      ) {
+        Text(text = "ОК", color = MaterialTheme.colorScheme.onErrorContainer)
       }
     }
   )

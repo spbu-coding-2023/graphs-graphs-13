@@ -19,7 +19,7 @@ class DijkstraTest {
     dirGraph.addVertex(3, "C")
     dirGraph.addEdge(Pair(1, 3), 5)
     dirGraph.addEdge(Pair(3, 2), -2)
-    assertFailsWith<IllegalArgumentException> { shortestPathDirected.findShortestPaths(1, 2) }
+    assertEquals(null to "Edge with negative weights in Dijkstra's algorithm.", shortestPathDirected.findShortestPaths(1, 2))
   }
 
   @Test
@@ -29,7 +29,7 @@ class DijkstraTest {
     dirGraph.addVertex(3, "C")
     dirGraph.addEdge(Pair(1, 3), 5)
     dirGraph.addEdge(Pair(3, 2), null)
-    assertFailsWith<IllegalArgumentException> { shortestPathDirected.findShortestPaths(1, 2) }
+    assertEquals(null to "Edge without weights in Dijkstra's algorithm.", shortestPathDirected.findShortestPaths(1, 2))
   }
 
   @Test
@@ -39,7 +39,7 @@ class DijkstraTest {
     dirGraph.addVertex(3, "C")
     dirGraph.addEdge(Pair(1, 3), 5)
     dirGraph.addEdge(Pair(3, 2), 2)
-    assertFailsWith<NoSuchElementException> { shortestPathDirected.findShortestPaths(4, 5) }
+    assertEquals(null to "The vertex doesn't exist in the graph.", shortestPathDirected.findShortestPaths(4, 5))
   }
 
   //endregion
@@ -54,7 +54,7 @@ class DijkstraTest {
     dirGraph.addEdge(Pair(2, 3), 5)
     dirGraph.addEdge(Pair(3, 1), 100)
     dirGraph.addEdge(Pair(4, 3), 15)
-    assertEquals(listOf<Int>(), shortestPathDirected.findShortestPaths(1, 4))
+    assertEquals(listOf<Int>() to null, shortestPathDirected.findShortestPaths(1, 4))
   }
 
   @Test
@@ -79,7 +79,7 @@ class DijkstraTest {
     dirGraph.addEdge(Pair(5, 7), 7)
     dirGraph.addEdge(Pair(7, 8), 54)
     dirGraph.addEdge(Pair(8, 9), 21)
-    assertEquals(listOf(1, 2, 5, 7, 8, 9), shortestPathDirected.findShortestPaths(1, 9))
+    assertEquals(listOf(1, 2, 5, 7, 8, 9) to null, shortestPathDirected.findShortestPaths(1, 9))
   }
 
   @Test
@@ -107,7 +107,7 @@ class DijkstraTest {
     dirGraph.addEdge(Pair(4, 1), 15)
     dirGraph.addEdge(Pair(5, 6), 120)
     dirGraph.addEdge(Pair(7, 5), 7)
-    assertEquals(listOf(1, 2, 5, 7, 8, 9), shortestPathDirected.findShortestPaths(1, 9))
+    assertEquals(listOf(1, 2, 5, 7, 8, 9) to null, shortestPathDirected.findShortestPaths(1, 9))
   }
 
   //endregion
@@ -125,7 +125,7 @@ class DijkstraTest {
     undirGraph.addEdge(Pair(1, 2), 15)
     undirGraph.addEdge(Pair(6, 5), 20)
     undirGraph.addEdge(Pair(5, 4), 50)
-    assertEquals(listOf<String>(), shortestPathUndirected.findShortestPaths(2, 5))
+    assertEquals(listOf<String>() to null, shortestPathUndirected.findShortestPaths(2, 5))
   }
 
   @Test
@@ -152,7 +152,7 @@ class DijkstraTest {
     undirGraph.addEdge(Pair(8, 9), 34)
     undirGraph.addEdge(Pair(9, 10), 80)
     undirGraph.addEdge(Pair(2, 11), 5)
-    assertEquals(listOf(1, 3, 5, 6, 4, 8, 9), shortestPathUndirected.findShortestPaths(1, 9))
+    assertEquals(listOf(1, 3, 5, 6, 4, 8, 9) to null, shortestPathUndirected.findShortestPaths(1, 9))
   }
   //endregion
 }

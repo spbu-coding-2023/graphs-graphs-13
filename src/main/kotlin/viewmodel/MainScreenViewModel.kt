@@ -34,26 +34,27 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
     }
   }
 
-  fun addVertex(id: Int, data: String) {
-    graphViewModel.addVertex(id, data)
+  fun addVertex(id: Int, data: String): String? {
+    return graphViewModel.addVertex(id, data)
   }
 
-  fun addEdge(from: Int, to: Int, w: Int?) {
-    graphViewModel.addEdge(from, to, w)
+  fun addEdge(from: Int, to: Int, w: Int?): String? {
+    return graphViewModel.addEdge(from, to, w)
   }
 
-  fun removeVertex(id: Int) {
-    graphViewModel.removeVertex(id)
+  fun removeVertex(id: Int): String? {
+    return graphViewModel.removeVertex(id)
   }
 
-  fun removeEdge(from: Int, to: Int) {
-    graphViewModel.removeEdge(from, to)
+  fun removeEdge(from: Int, to: Int): String? {
+    return graphViewModel.removeEdge(from, to)
   }
 
-  fun saveToNeo4j(uri: String, user: String, password: String) {
+  fun saveToNeo4j(uri: String, user: String, password: String): String? {
     val neo4j = Neo4jRepository(uri, user, password)
-    neo4j.saveGraph(graph)
+    return neo4j.saveGraph(graph)
   }
+
   fun saveToFile(): String? {
     val fileSystem = FileSystem()
     return fileSystem.saveGraph(graph)
@@ -61,27 +62,29 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
 
   /** Paint the vertices and edges of the found path.
    */
-  fun runDijkstraAlgorithm(start: Int, end: Int) {
+  fun runDijkstraAlgorithm(start: Int, end: Int):String? {
     resetGraphView()
     val dijkstra = Dijkstra(graph)
     val result = dijkstra.findShortestPaths(start, end)
-    for (vertexId in result) {
+    if (result.first == null) return result.second!!
+    for (vertexId in result.first!!) {
       graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
     }
     for (edgeView in graphViewModel.edgesView) {
-      if (edgeView.key.vertices.first in result && edgeView.key.vertices.second in result) {
+      if (edgeView.key.vertices.first in result.first!! && edgeView.key.vertices.second in result.first!!) {
         edgeView.value.color = Color(10, 230, 248)
         edgeView.value.strokeWidth = 9f
       }
     }
+    return null
   }
 
   /** Paint each ccs its own color. The number of colors is limited,
    *  so if there are more than 10 ccs, the colors will begin to repeat.
    */
-  fun runKosarajuAlgorithm() {
+  fun runKosarajuAlgorithm(): String? {
     if (graph is UndirectedGraph) {
-      throw IllegalArgumentException("Kosaraju's algorithm cannot be run on undirected graphs.")
+      return "Kosaraju's algorithm cannot be run on undirected graphs."
     }
     val colors = listOf(
       Color(125, 21, 21),
@@ -103,6 +106,7 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
         graphViewModel.verticesView[vertexId]?.color = colors[i % 10]
       }
     }
+    return null
   }
 
   /** Paint each community its own color. The number of colors is limited,
@@ -137,8 +141,8 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
     if (graph is DirectedGraph) {
       return "Prims's algorithm cannot be run on directed graphs."
     }
-    for(edge in graph.edges) {
-      if(edge.weight == null) {
+    for (edge in graph.edges) {
+      if (edge.weight == null) {
         return "Each edge of graph for Prim's algorithm must have a weight:\nthe edge with weight = 'null' is incorrect."
       }
     }

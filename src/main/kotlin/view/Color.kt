@@ -12,6 +12,7 @@ val White = Color(245, 245, 245)
 val Black = Color(0, 0, 0)
 val DarkRed2 = Color(41, 28, 28)
 val LightRed = Color(204, 0, 0)
+val DarkRed3 = Color(189, 0, 0)
 
 val NastyaColorPalette = lightColorScheme(
 )
@@ -29,7 +30,9 @@ val KatyaColorPalette = lightColorScheme(
   onBackground = DarkGray,
   surface = Gray,
   onSurface = DarkRed2,
-  outline = DarkRed2
+  outline = DarkRed2,
+  errorContainer = DarkRed3,
+  onErrorContainer = Black,
 )
 
 val LiyaColorPalette = lightColorScheme(

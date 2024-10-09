@@ -121,7 +121,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
-              viewModel.runKosarajuAlgorithm()
+              catchError(viewModel.runKosarajuAlgorithm())
             }) {
               Text(text = "Kosaraju", color = MaterialTheme.colorScheme.onSecondary)
             }
@@ -135,13 +135,13 @@ fun MainScreen(viewModel: MainScreenViewModel) {
               expandedAlgorithmsMenu = false
               catchError(viewModel.runPrimAlgorithm())
             }) {
-              Text("Prim")
+              Text(text = "Prim", color = MaterialTheme.colorScheme.onSecondary)
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
               showCycleSearchDialog = true
             }) {
-              Text("CycleSearch")
+              Text(text = "CycleSearch", color = MaterialTheme.colorScheme.onSecondary)
             }
           }
         }
@@ -288,7 +288,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       DijkstraDialog(
         onDismiss = { showDijkstraDialog = false },
         onRunAlgorithm = { start, end ->
-          viewModel.runDijkstraAlgorithm(start, end)
+          catchError(viewModel.runDijkstraAlgorithm(start, end))
           showDijkstraDialog = false
         }
       )
@@ -297,7 +297,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       AddVertexDialog(
         onDismiss = { showAddVertexDialog = false },
         onRunAlgorithm = { id, data ->
-          viewModel.addVertex(id, data)
+          catchError(viewModel.addVertex(id, data))
           showAddVertexDialog = false
         }
       )
@@ -315,7 +315,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       RemoveVertexDialog(
         onDismiss = { showRemoveVertexDialog = false },
         onRunAlgorithm = { id ->
-          viewModel.removeVertex(id)
+          catchError(viewModel.removeVertex(id))
           showRemoveVertexDialog = false
         }
       )
@@ -324,7 +324,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       AddEdgeDialog(
         onDismiss = { showAddEdgeDialog = false },
         onRunAlgorithm = { from, to, w ->
-          viewModel.addEdge(from, to, w)
+          catchError(viewModel.addEdge(from, to, w))
           showAddEdgeDialog = false
         }
       )
@@ -333,7 +333,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       RemoveEdgeDialog(
         onDismiss = { showRemoveEdgeDialog = false },
         onRunAlgorithm = { from, to ->
-          viewModel.removeEdge(from, to)
+          catchError(viewModel.removeEdge(from, to))
           showRemoveEdgeDialog = false
         }
       )
@@ -342,7 +342,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
       SaveToNeo4jDialog(
         onDismiss = { showNeo4jDialog = false },
         onRunAlgorithm = { uri, user, password ->
-          viewModel.saveToNeo4j(uri, user, password)
+          catchError(viewModel.saveToNeo4j(uri, user, password))
           showNeo4jDialog = false
         }
       )
