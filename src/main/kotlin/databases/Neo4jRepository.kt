@@ -47,7 +47,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     }
   }
 
-  fun loadGraph(): Graph {
+  fun loadGraph(): Pair<Graph?, String?> {
     val graph: Graph
     val transaction = session.beginTransaction()
     try {
@@ -56,12 +56,12 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
         val record = graphTypeResult.next()
         record.get("type").asString()
       } else {
-        throw Exception("Graph type not found in the database")
+        return (null to "Graph type not found in the database")
       }
       graph = when (graphType) {
         "DIRECTED" -> DirectedGraph()
         "UNDIRECTED" -> UndirectedGraph()
-        else -> throw Exception("Unknown graph type: $graphType")
+         else -> return (null to "Unknown graph type: $graphType")
       }
       val verticesResult = transaction.run("MATCH (v:Vertex) RETURN v.id AS id, v.data AS data")
       while (verticesResult.hasNext()) {
@@ -88,7 +88,7 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
     } finally {
       transaction.close()
     }
-    return graph
+    return (graph to null)
   }
 
   override fun close() {

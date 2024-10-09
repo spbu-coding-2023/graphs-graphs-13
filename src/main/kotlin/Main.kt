@@ -27,22 +27,23 @@ fun App() {
     var graph by remember { mutableStateOf<Graph?>(null) }
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    fun catchErrorOrGetGraph(result:Pair<Graph?,String?>) {
-      if (result.second == null ) {
+    fun catchErrorOrGetGraph(result: Pair<Graph?, String?>) {
+      if (result.second == null) {
         graph = result.first
       } else {
         errorMessage = result.second
         showErrorDialog = true
       }
     }
+
     if (graph == null) {
       WelcomeScreen { selectedGraphType ->
         graphType = selectedGraphType
         when (graphType) {
           "Directed" -> graph = DirectedGraph()
           "Undirected" -> graph = UndirectedGraph()
-          "Neo4j" -> graph = neo4j.loadGraph()
-           else -> catchErrorOrGetGraph(fileSystem.openGraph())
+          "Neo4j" -> catchErrorOrGetGraph(neo4j.loadGraph())
+          else -> catchErrorOrGetGraph(fileSystem.openGraph())
         }
       }
     } else {
