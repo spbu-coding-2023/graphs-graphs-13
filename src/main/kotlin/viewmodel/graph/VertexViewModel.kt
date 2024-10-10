@@ -2,7 +2,6 @@ package viewmodel.graph
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -38,7 +37,7 @@ class VertexViewModel(
     }
 
   val label
-    get() = v.data.toString()
+    get() = v.data
 
   val labelVisible
     get() = _labelVisible.value

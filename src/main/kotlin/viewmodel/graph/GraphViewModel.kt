@@ -1,12 +1,10 @@
 package viewmodel.graph
 
 import androidx.compose.runtime.State
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import model.graph.Edge
 import model.graph.Graph
 import model.graph.UndirectedGraph
-import model.graph.Vertex
 import viewmodel.defaultColorLine
 import viewmodel.defaultColorVertex
 import viewmodel.defaultStrokeWidth

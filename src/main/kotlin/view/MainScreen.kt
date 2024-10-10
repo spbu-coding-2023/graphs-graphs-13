@@ -2,25 +2,17 @@ package view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import model.graph.Graph
-import androidx.compose.material3.MaterialTheme
-import databases.FileSystem
-import org.jetbrains.skia.impl.Stats.enabled
 import view.graph.GraphView
 import viewmodel.MainScreenViewModel
-import viewmodel.graph.CircularPlacementStrategy
-import viewmodel.graph.GraphViewModel
 
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
