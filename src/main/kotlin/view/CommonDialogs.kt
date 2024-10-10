@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun Neo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, String) -> Unit) {
@@ -478,7 +479,12 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
 fun ErrorDialog(onDismiss: () -> Unit, errorMessage: String) {
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = { Text(text = "Error:", color = MaterialTheme.colorScheme.onErrorContainer) },
+    title = {
+      Text(
+        text = "Error:", color = MaterialTheme.colorScheme.errorContainer,
+        fontSize = 20.sp
+      )
+    },
     text = { Text(text = errorMessage, color = MaterialTheme.colorScheme.onErrorContainer) },
     confirmButton = {
       Button(
