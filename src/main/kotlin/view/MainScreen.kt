@@ -31,8 +31,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
   var showNeo4jDialog by remember { mutableStateOf(false) }
   var showErrorDialog by remember { mutableStateOf(false) }
   var errorMessage: String? = null
-  fun catchError(messageOfError: String? ) {
-    if(messageOfError != null ) {
+  fun catchError(messageOfError: String?) {
+    if (messageOfError != null) {
       errorMessage = messageOfError
       showErrorDialog = true
     }
@@ -42,7 +42,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
     Row(
       horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-      Column(modifier = Modifier.width(300.dp).fillMaxHeight().background(MaterialTheme.colorScheme.surface)) {
+      Column(modifier = Modifier.width(270.dp).fillMaxHeight().background(MaterialTheme.colorScheme.surface)) {
         Row {
           Checkbox(
             checked = viewModel.showVerticesLabels.value, onCheckedChange = {
@@ -91,6 +91,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
         Button(
           onClick = viewModel::resetGraphView,
           enabled = true,
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
           colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -98,20 +99,26 @@ fun MainScreen(viewModel: MainScreenViewModel) {
         ) {
           Text(
             text = "Reset default settings",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(4.dp),
-            color = MaterialTheme.colorScheme.onPrimary
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.align(Alignment.CenterVertically)
           )
         }
-        Box {
-          Row(verticalAlignment = Alignment.CenterVertically) {
+        Box (modifier = Modifier.padding(horizontal = 10.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Button(
               onClick = { expandedAlgorithmsMenu = true }, colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
-              )
+              ),
+              modifier = Modifier.fillMaxWidth()
             ) {
-              Text(text = "Algorithm", color = MaterialTheme.colorScheme.onPrimary)
+              Text(
+                text = "Algorithm",
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.align(Alignment.CenterVertically)
+              )
               Icon(Icons.Default.ArrowDropDown, contentDescription = "Select algorithm")
             }
           }
@@ -152,16 +159,17 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
           }
         }
-        Row {
-          Box(modifier = Modifier.padding(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Row (modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.SpaceBetween){
+          Box(modifier = Modifier.weight(1f).padding(end = 2.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
               Button(
                 onClick = { expandedAddMenu = true }, colors = ButtonDefaults.buttonColors(
                   backgroundColor = MaterialTheme.colorScheme.primary,
                   contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                ),
+                modifier = Modifier.fillMaxWidth()
               ) {
-                Text(text = "Add", color = MaterialTheme.colorScheme.onPrimary)
+                Text(text = "Add", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Add")
               }
             }
@@ -184,15 +192,16 @@ fun MainScreen(viewModel: MainScreenViewModel) {
               }
             }
           }
-          Box(modifier = Modifier.padding(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+          Box(modifier = Modifier.weight(1f).padding(end = 2.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
               Button(
                 onClick = { expandedRemoveMenu = true }, colors = ButtonDefaults.buttonColors(
                   backgroundColor = MaterialTheme.colorScheme.primary,
                   contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                ),
+                modifier = Modifier.fillMaxWidth()
               ) {
-                Text(text = "Remove", color = MaterialTheme.colorScheme.onPrimary)
+                Text(text = "Remove", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Remove")
               }
             }
@@ -216,15 +225,16 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
           }
         }
-        Box(modifier = Modifier.padding(2.dp)) {
-          Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(modifier = Modifier.padding(horizontal = 10.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Button(
               onClick = { expandedSaveMenu = true }, colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
-              )
+              ),
+              modifier = Modifier.fillMaxWidth()
             ) {
-              Text(text = "Save graph", color = MaterialTheme.colorScheme.onPrimary)
+              Text(text = "Save graph", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
               Icon(Icons.Default.ArrowDropDown, contentDescription = "Save graph")
             }
           }
