@@ -59,8 +59,15 @@ fun App() {
       Neo4jDialog(
         onDismiss = { showNeo4jDialog = false },
         onRunAlgorithm = { uri, user, password ->
-          val neo4j = Neo4jRepository(uri, user, password)
-          catchErrorOrGetGraph(neo4j.loadGraph())
+          try {
+            val neo4j = Neo4jRepository(uri, user, password)
+            catchErrorOrGetGraph(neo4j.loadGraph())
+          } catch (e: Exception) {
+            catchErrorOrGetGraph(
+              null to "Error loading:\n" +
+                      (e.message?.substringAfter("Exception: ") ?: "unable to load graph")
+            )
+          }
           showNeo4jDialog = false
         }
       )

@@ -52,8 +52,13 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
   }
 
   fun saveToNeo4j(uri: String, user: String, password: String): String? {
-    val neo4j = Neo4jRepository(uri, user, password)
-    return neo4j.saveGraph(graph)
+    try {
+      val neo4j = Neo4jRepository(uri, user, password)
+      return neo4j.saveGraph(graph)
+    } catch (e: Exception) {
+      return "Error saving:\n" +
+              (e.message?.substringAfter("Exception: ") ?: "unable to save graph")
+    }
   }
 
   fun saveToFile(): String? {
@@ -63,7 +68,7 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
 
   /** Paint the vertices and edges of the found path.
    */
-  fun runDijkstraAlgorithm(start: Int, end: Int):String? {
+  fun runDijkstraAlgorithm(start: Int, end: Int): String? {
     resetGraphView()
     val dijkstra = Dijkstra(graph)
     val result = dijkstra.findShortestPaths(start, end)
@@ -72,8 +77,8 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
       graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
     }
     for (i in 1 until result.first!!.size) {
-      val a = graphViewModel.edgesView.keys.find {it.vertices == Pair(result.first!![i-1], result.first!![i]) }
-      graphViewModel.edgesView[a]!!.color  = Color(86, 29, 39)
+      val a = graphViewModel.edgesView.keys.find { it.vertices == Pair(result.first!![i - 1], result.first!![i]) }
+      graphViewModel.edgesView[a]!!.color = Color(86, 29, 39)
     }
     return null
   }

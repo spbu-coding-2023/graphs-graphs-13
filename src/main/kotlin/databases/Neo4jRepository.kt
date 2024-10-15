@@ -43,7 +43,8 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
       return null
     } catch (e: Exception) {
       transaction.rollback()
-      return "Failed to save graph (transaction error)"
+      return "Failed to save graph:\n" +
+              (e.message?.substringAfter("Exception: ") ?: "incorrect graph saving")
     } finally {
       transaction.close()
     }
@@ -91,7 +92,8 @@ class Neo4jRepository(uri: String, user: String, password: String) : Closeable {
       return (graph to null)
     } catch (e: Exception) {
       transaction.rollback()
-      return null to "Failed to load graph (transaction error)"
+      return null to "Failed to load graph:\n" +
+              (e.message?.substringAfter("Exception: ") ?: "incorrect graph loading")
     } finally {
       transaction.close()
     }
