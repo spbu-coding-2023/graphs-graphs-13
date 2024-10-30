@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
 class LouvainTest {
-  private val dirGraph = DirectedGraph<String>()
+  private val dirGraph = DirectedGraph()
   private val communityDir = Louvain(dirGraph)
-  private val undirGraph = UndirectedGraph<String>()
+  private val undirGraph = UndirectedGraph()
   private val communityUndir = Louvain(undirGraph)
 
   //region Special cases

@@ -10,7 +10,7 @@ import model.graph.DirectedGraph
  * @property stack a stack for storing vertices in the order in which they were traversed
  * @property stronglyConnectedComponents list of strongly connected components in graph
  */
-class Kosaraju<D>(private val graph: DirectedGraph<D>) {
+class Kosaraju(private val graph: DirectedGraph) {
   private val visited = hashMapOf<Int, Boolean>()
   private val stack = mutableListOf<Int>()
   private val stronglyConnectedComponents = mutableListOf<List<Int>>()
@@ -44,7 +44,7 @@ class Kosaraju<D>(private val graph: DirectedGraph<D>) {
    * @param stack for storing vertices in traversed order
    * @param graph graph in which the traversal occurs
    */
-  private fun dfs(vertexID: Int, stack: MutableList<Int>, graph: DirectedGraph<D>) {
+  private fun dfs(vertexID: Int, stack: MutableList<Int>, graph: DirectedGraph) {
     visited[vertexID] = true
     for (nextVertexID in (graph.adjacency[vertexID]?.keys ?: emptyList()))
       if (visited[nextVertexID] != true) {
@@ -57,8 +57,8 @@ class Kosaraju<D>(private val graph: DirectedGraph<D>) {
    * The transposeGraph method transposes the graph.
    * @return the transposed graph
    */
-  private fun transposeGraph(): DirectedGraph<D> {
-    val transposedGraph = DirectedGraph<D>()
+  private fun transposeGraph(): DirectedGraph {
+    val transposedGraph = DirectedGraph()
     for ((id, vertex) in graph.vertices) {
       transposedGraph.addVertex(id, vertex.data)
     }
