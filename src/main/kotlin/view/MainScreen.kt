@@ -39,9 +39,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
   }
 
   Material3AppTheme(theme) {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
+    Row {
       Column(modifier = Modifier.width(270.dp).fillMaxHeight().background(MaterialTheme.colorScheme.surface)) {
         Row {
           Checkbox(
@@ -104,7 +102,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             modifier = Modifier.align(Alignment.CenterVertically)
           )
         }
-        Box (modifier = Modifier.padding(horizontal = 10.dp)) {
+        Box(modifier = Modifier.padding(horizontal = 10.dp)) {
           Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Button(
               onClick = { expandedAlgorithmsMenu = true }, colors = ButtonDefaults.buttonColors(
@@ -159,7 +157,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
           }
         }
-        Row (modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.SpaceBetween){
+        Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
           Box(modifier = Modifier.weight(1f).padding(end = 2.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
               Button(
@@ -258,47 +256,58 @@ fun MainScreen(viewModel: MainScreenViewModel) {
           }
         }
       }
-      Box {
-        var expandedThemeMenu by remember { mutableStateOf(false) }
-        Button(
-          onClick = { expandedThemeMenu = true },
-          modifier = Modifier.align(Alignment.TopEnd), colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-          )
-        ) {
-          Text(text = "Theme", color = MaterialTheme.colorScheme.onPrimary)
-          Icon(Icons.Default.ArrowDropDown, contentDescription = "Select theme")
-        }
-        DropdownMenu(
-          expanded = expandedThemeMenu,
-          onDismissRequest = { expandedThemeMenu = false },
-          modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
-        ) {
-          DropdownMenuItem(onClick = {
-            theme = Theme.NASTYA
-            expandedThemeMenu = false
-          }) {
-            Text("Nastya's theme", color = MaterialTheme.colorScheme.onSecondary)
-          }
-          DropdownMenuItem(onClick = {
-            theme = Theme.LIYA
-            expandedThemeMenu = false
-          }) {
-            Text("Liya's theme", color = MaterialTheme.colorScheme.onSecondary)
-          }
-          DropdownMenuItem(onClick = {
-            theme = Theme.KATYA
-            expandedThemeMenu = false
-          }) {
-            Text("Katya's theme", color = MaterialTheme.colorScheme.onSecondary)
-          }
-        }
-      }
       Surface(
         modifier = Modifier.weight(1f).background(MaterialTheme.colorScheme.background),
       ) {
-        GraphView(viewModel.graphViewModel)
+        Box(modifier = Modifier.fillMaxSize()) {
+          GraphView(viewModel.graphViewModel) // График занимает всё пространство
+
+          var expandedThemeMenu by remember { mutableStateOf(false) }
+
+          // Кнопка темы
+          Box(
+            modifier = Modifier
+              .align(Alignment.TopEnd) // Выровнено по правому верхнему углу
+              .padding(16.dp)
+          ) {
+            // Кнопка
+            Button(
+              onClick = { expandedThemeMenu = true },
+              colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+              )
+            ) {
+              Text(text = "Theme", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Select theme")
+            }
+            // Выпадающее меню
+            DropdownMenu(
+              expanded = expandedThemeMenu,
+              onDismissRequest = { expandedThemeMenu = false },
+              modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+            ) {
+              DropdownMenuItem(onClick = {
+                theme = Theme.NASTYA
+                expandedThemeMenu = false
+              }) {
+                Text("Nastya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+              DropdownMenuItem(onClick = {
+                theme = Theme.LIYA
+                expandedThemeMenu = false
+              }) {
+                Text("Liya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+              DropdownMenuItem(onClick = {
+                theme = Theme.KATYA
+                expandedThemeMenu = false
+              }) {
+                Text("Katya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+            }
+          }
+        }
       }
     }
     if (showDijkstraDialog) {
