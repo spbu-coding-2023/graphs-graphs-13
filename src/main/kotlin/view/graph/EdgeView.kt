@@ -14,8 +14,8 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 @Composable
-fun EdgeView(
-  viewModel: EdgeViewModel,
+fun <D> EdgeView(
+  viewModel: EdgeViewModel<D>,
   modifier: Modifier = Modifier,
 ) {
 

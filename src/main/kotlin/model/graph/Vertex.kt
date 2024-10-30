@@ -1,4 +1,4 @@
 package model.graph
 
-data class Vertex(var id: Int, var data: String) {
+data class Vertex<D>(var id: Int, var data: D) {
 }
