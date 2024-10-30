@@ -8,14 +8,14 @@ import model.graph.UndirectedGraph
  *
  * At the same time, if the graph consists of several connectivity components,
  * the algorithm constructs a forest, each tree of which is MST.
- * @param D input type
+ *
  * @property [graph] a undirected weighted graph, whose MST we want to construct
  * @constructor Creates a graph, based on [graph], to which the following functions can be applied:
  * function [treePrim] : returns MST for [graph]
  * function [weightPrim] : returns the weight of received MST
  */
 
-class Prim<D>(private val graph: UndirectedGraph<D>) {
+class Prim(private val graph: UndirectedGraph) {
 
     /**
      * This function implements Prim's algorithm for
@@ -25,9 +25,9 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
      * @return MST of connectivity component
      * @receiver fun [treePrim]
      */
-    private fun getMST(graph: UndirectedGraph<D>): UndirectedGraph<D> {
+    private fun getMST(graph: UndirectedGraph): UndirectedGraph {
 
-        val graphMst = UndirectedGraph<D>()
+        val graphMst = UndirectedGraph()
 
         for (vertex in graph.vertices.keys) {
             graphMst.addVertex(vertex, graph.vertices[vertex]!!.data)
@@ -90,8 +90,8 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
     private fun dfs(
         idVertex: Int,
         visited: HashMap<Int, Boolean>,
-        component: UndirectedGraph<D>
-    ): UndirectedGraph<D> {
+        component: UndirectedGraph
+    ): UndirectedGraph {
 
         visited[idVertex] = true
         for (idAdjacency in graph.adjacency[idVertex]!!.keys) {
@@ -116,9 +116,9 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
      * @return list of MST for each connectivity component of graph
      * @receiver  fun [weightPrim]
      */
-    fun treePrim(): MutableList<UndirectedGraph<D>> {
+    fun treePrim(): MutableList<UndirectedGraph> {
 
-        val returnListOfMST = mutableListOf<UndirectedGraph<D>>()
+        val returnListOfMST = mutableListOf<UndirectedGraph>()
 
         val visited = hashMapOf<Int, Boolean>()
         for (vertexId in graph.vertices.keys) {
@@ -126,11 +126,11 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
         }
 
         var initIndex: Int
-        var component: UndirectedGraph<D>
+        var component: UndirectedGraph
         while (visited.values.contains(false)) {
 
             initIndex = visited.filterValues { !it }.keys.first()
-            component = UndirectedGraph<D>()
+            component = UndirectedGraph()
             component.addVertex(initIndex, graph.vertices[initIndex]!!.data)
             component = dfs(initIndex, visited, component)
             returnListOfMST.add(getMST(component))
@@ -152,9 +152,7 @@ class Prim<D>(private val graph: UndirectedGraph<D>) {
         for (element in treePrim()) {
             for (edge in element.edges) {
 
-                if (edge.weight == null) {
-                    throw IllegalArgumentException("Each edge of a weighted graph must have a weight: the edge with weight = 'null' isn't correct")
-                } else {
+                if (edge.weight != null) {
                     treeWeight += edge.weight!!
                 }
 

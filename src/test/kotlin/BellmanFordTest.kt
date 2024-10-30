@@ -6,8 +6,8 @@ import model.graph.UndirectedGraph
 import org.junit.jupiter.api.Test
 
 class BellmanFordTest {
-    private val dirGraph = DirectedGraph<String>()
-    private val undirGraph = UndirectedGraph<String>()
+    private val dirGraph = DirectedGraph()
+    private val undirGraph = UndirectedGraph()
     private val bellmanFordDirected = BellmanFord(dirGraph)
     private val bellmanFordUndirected = BellmanFord(undirGraph)
 

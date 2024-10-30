@@ -1,27 +1,26 @@
 package viewmodel.graph
 
 import androidx.compose.runtime.State
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import model.graph.Edge
 import model.graph.Graph
 import model.graph.UndirectedGraph
-import model.graph.Vertex
 import viewmodel.defaultColorLine
 import viewmodel.defaultColorVertex
 import viewmodel.defaultStrokeWidth
 
-class GraphViewModel<D>(
-  private val graph: Graph<D>,
+class GraphViewModel(
+  private val graph: Graph,
   private val showVerticesLabels: State<Boolean>,
+  private val showVerticesId: State<Boolean>,
   private val showEdgesLabels: State<Boolean>,
 ) {
-  internal val verticesView: HashMap<Int, VertexViewModel<D>> = hashMapOf()
-  internal val edgesView: HashMap<Edge<D>, EdgeViewModel<D>> = hashMapOf()
+  internal val verticesView: HashMap<Int, VertexViewModel> = hashMapOf()
+  internal val edgesView: HashMap<Edge, EdgeViewModel> = hashMapOf()
 
   init {
     graph.getVertices().forEach { vertex ->
-      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, vertex, showVerticesLabels)
+      verticesView[vertex.id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, vertex, showVerticesLabels, showVerticesId)
     }
     graph.edges.forEach { edge ->
       val fst = verticesView[edge.vertices.first]
@@ -32,31 +31,38 @@ class GraphViewModel<D>(
     }
   }
 
-  fun addVertex(id: Int, data: D) {
-    graph.addVertex(id, data)
-    verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels)
+  fun addVertex(id: Int, data: String): String? {
+    val addedResult = graph.addVertex(id, data)
+    if (addedResult != null) return addedResult
+    verticesView[id] = VertexViewModel(0.dp, 0.dp, defaultColorVertex, graph.vertices[id]!!, showVerticesLabels, showVerticesId)
+    return null
   }
 
-  fun removeVertex(id: Int) {
-    graph.removeVertex(id)
+  fun removeVertex(id: Int): String? {
+    val removedResult = graph.removeVertex(id)
+    if (removedResult != null) return removedResult
     verticesView.remove(id)
     val edgesToRemove = edgesView.keys.filter { edge -> edge.vertices.first == id || edge.vertices.second == id }
     edgesToRemove.forEach { edge ->
       edgesView.remove(edge)
     }
+    return null
   }
 
-  fun addEdge(from: Int, to: Int, w: Int?) {
-    graph.addEdge(Pair(from, to), w)
-    val fst = verticesView[from] ?: throw IllegalStateException("VertexView for vertex with id: $from not found")
-    val snd = verticesView[to] ?: throw IllegalStateException("VertexView for vertex with id: $to not found")
+  fun addEdge(from: Int, to: Int, w: Int?): String? {
+    val addedResult = graph.addEdge(Pair(from, to), w)
+    if (addedResult != null) return addedResult
+    val fst = verticesView[from] ?: return "VertexView for vertex with id: $from not found"
+    val snd = verticesView[to] ?: return "VertexView for vertex with id: $to not found"
     graph.edges.find { it.vertices == Pair(from, to) }?.let { edge ->
       edgesView[edge] = EdgeViewModel(fst, snd, defaultColorLine, defaultStrokeWidth, edge, showEdgesLabels)
     }
+    return null
   }
 
-  fun removeEdge(from: Int, to: Int) {
-    graph.removeEdge(Pair(from, to))
+  fun removeEdge(from: Int, to: Int): String? {
+    val removedResult = graph.removeEdge(Pair(from, to))
+    if (removedResult != null) return removedResult
     edgesView.keys.find { it.vertices == Pair(from, to) }?.let { edge ->
       edgesView.remove(edge)
     }
@@ -65,5 +71,6 @@ class GraphViewModel<D>(
         edgesView.remove(edge)
       }
     }
+    return null
   }
 }

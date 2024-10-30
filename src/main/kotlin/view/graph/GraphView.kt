@@ -12,8 +12,8 @@ import viewmodel.graph.VertexViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun <D>GraphView(
-  viewModel: GraphViewModel<D>,
+fun GraphView(
+  viewModel: GraphViewModel,
 ) {
   Box(modifier = Modifier
     .fillMaxSize()
