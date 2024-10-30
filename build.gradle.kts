@@ -22,8 +22,6 @@ dependencies {
   implementation(compose.desktop.currentOs)
   implementation(compose.material3)
   implementation(compose.materialIconsExtended)
-  implementation("org.neo4j.driver", "neo4j-java-driver", "5.6.0")
-  implementation("com.google.code.gson:gson:2.10.1")
   testImplementation("org.jetbrains.kotlin:kotlin-test")
   testImplementation("io.kotest:kotest-runner-junit5-jvm:4.6.0")
 }

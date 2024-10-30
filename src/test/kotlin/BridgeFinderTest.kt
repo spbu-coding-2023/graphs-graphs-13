@@ -4,8 +4,8 @@ import model.graph.UndirectedGraph
 import org.junit.jupiter.api.Test
 
 class BridgeFinderTest {
-    private val undirGraph = UndirectedGraph()
-    private val bridgeFinder = BridgeFinder()
+    private val undirGraph = UndirectedGraph<String>()
+    private val bridgeFinder = BridgeFinder<String>()
 
     init {
         // Добавление вершин для ненаправленного графа

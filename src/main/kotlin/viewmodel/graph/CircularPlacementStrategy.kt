@@ -1,12 +1,14 @@
 package viewmodel.graph
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
+import kotlin.random.Random
 
 class CircularPlacementStrategy : RepresentationStrategy {
-  override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
+  override fun <D> place(width: Double, height: Double, vertices: Collection<VertexViewModel<D>>) {
     if (vertices.isEmpty()) {
       println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
       return

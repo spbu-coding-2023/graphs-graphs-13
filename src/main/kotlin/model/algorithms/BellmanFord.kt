@@ -2,7 +2,7 @@ package model.algorithms
 
 import model.graph.Graph
 
-class BellmanFord(private val graph: Graph) {
+class BellmanFord<D>(private val graph: Graph<D>) {
     fun findShortestPath(src: Int, dest: Int): Pair<Int, List<Int>>? {
         val dist = mutableMapOf<Int, Int>().withDefault { Int.MAX_VALUE }
         val pred = mutableMapOf<Int, Int?>()

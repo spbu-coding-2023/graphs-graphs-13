@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import viewmodel.graph.VertexViewModel
 
 @Composable
-fun VertexView(
-  viewModel: VertexViewModel,
+fun <D> VertexView(
+  viewModel: VertexViewModel<D>,
   modifier: Modifier = Modifier,
 ) {
 
@@ -47,14 +47,6 @@ fun VertexView(
           .align(Alignment.Center),
         text = viewModel.label,
         color = if (isColorDark(viewModel.color)) Color.White else Color.Black
-      )
-    }
-    if (viewModel.idVisible) {
-      Text(
-        modifier = Modifier
-          .align(Alignment.Center).offset(0.dp, -viewModel.radius - 10.dp),
-        text = viewModel.id,
-        color = Color.Black
       )
     }
   }

@@ -2,8 +2,6 @@ package viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import databases.FileSystem
-import databases.Neo4jRepository
 import model.graph.Graph
 import viewmodel.graph.GraphViewModel
 import viewmodel.graph.RepresentationStrategy
@@ -16,11 +14,10 @@ var defaultColorLine: Color = Color.Black
 var defaultColorVertex: Color = Color.Gray
 var defaultStrokeWidth: Float = 4f
 
-class MainScreenViewModel(private val graph: Graph, private val representationStrategy: RepresentationStrategy) {
+class MainScreenViewModel<D>(private val graph: Graph<D>, private val representationStrategy: RepresentationStrategy) {
   val showVerticesLabels = mutableStateOf(false)
-  val showVerticesId = mutableStateOf(false)
   val showEdgesLabels = mutableStateOf(false)
-  val graphViewModel = GraphViewModel(graph, showVerticesLabels, showVerticesId, showEdgesLabels)
+  val graphViewModel = GraphViewModel(graph, showVerticesLabels, showEdgesLabels)
 
   init {
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
@@ -35,60 +32,39 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
     }
   }
 
-  fun addVertex(id: Int, data: String): String? {
-    return graphViewModel.addVertex(id, data)
+  fun addVertex(id: Int, data: D) {
+    graphViewModel.addVertex(id, data)
   }
 
-  fun addEdge(from: Int, to: Int, w: Int?): String? {
-    return graphViewModel.addEdge(from, to, w)
+  fun addEdge(from: Int, to: Int, w: Int?) {
+    graphViewModel.addEdge(from, to, w)
   }
 
-  fun removeVertex(id: Int): String? {
-    return graphViewModel.removeVertex(id)
+  fun removeVertex(id: Int) {
+    graphViewModel.removeVertex(id)
   }
 
-  fun removeEdge(from: Int, to: Int): String? {
-    return graphViewModel.removeEdge(from, to)
+  fun removeEdge(from: Int, to: Int) {
+    graphViewModel.removeEdge(from, to)
   }
 
-  fun saveToNeo4j(uri: String, user: String, password: String): String? {
-    try {
-      val neo4j = Neo4jRepository(uri, user, password)
-      return neo4j.saveGraph(graph)
-    } catch (e: Exception) {
-      return "Error saving:\n" +
-              (e.message?.substringAfter("Exception: ") ?: "unable to save graph")
-    }
-  }
-
-  fun saveToFile(): String? {
-    val fileSystem = FileSystem()
-    return fileSystem.saveGraph(graph)
-  }
-
-  /** Paint the vertices and edges of the found path.
+  /** Paint the vertices of the found path.
    */
-  fun runDijkstraAlgorithm(start: Int, end: Int): String? {
+  fun runDijkstraAlgorithm(start: Int, end: Int) {
     resetGraphView()
     val dijkstra = Dijkstra(graph)
     val result = dijkstra.findShortestPaths(start, end)
-    if (result.first == null) return result.second!!
-    for (vertexId in result.first!!) {
+    for (vertexId in result) {
       graphViewModel.verticesView[vertexId]?.color = Color(125, 21, 21)
     }
-    for (i in 1 until result.first!!.size) {
-      val a = graphViewModel.edgesView.keys.find { it.vertices == Pair(result.first!![i - 1], result.first!![i]) }
-      graphViewModel.edgesView[a]!!.color = Color(86, 29, 39)
-    }
-    return null
   }
 
   /** Paint each ccs its own color. The number of colors is limited,
    *  so if there are more than 10 ccs, the colors will begin to repeat.
    */
-  fun runKosarajuAlgorithm(): String? {
+  fun runKosarajuAlgorithm() {
     if (graph is UndirectedGraph) {
-      return "Kosaraju's algorithm cannot be run on undirected graphs."
+      throw IllegalArgumentException("Kosaraju's algorithm cannot be run on undirected graphs.")
     }
     val colors = listOf(
       Color(125, 21, 21),
@@ -110,7 +86,6 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
         graphViewModel.verticesView[vertexId]?.color = colors[i % 10]
       }
     }
-    return null
   }
 
   /** Paint each community its own color. The number of colors is limited,
@@ -141,16 +116,11 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
 
   /** Paints over the vertices and edges that belong to the found MST.
    */
-  fun runPrimAlgorithm(): String? {
-    if (graph is DirectedGraph) {
-      return "Prims's algorithm cannot be run on directed graphs."
+  fun runPrimAlgorithm(): Int {
+    if (graph is DirectedGraph<D>) {
+      throw IllegalArgumentException("Prims's algorithm cannot be run on directed graphs.")
     }
-    for (edge in graph.edges) {
-      if (edge.weight == null) {
-        return "Each edge of graph for Prim's algorithm must have a weight:\nthe edge with weight = 'null' is incorrect."
-      }
-    }
-    val prim = Prim(graph as UndirectedGraph)
+    val prim = Prim(graph as UndirectedGraph<D>)
     val result = prim.treePrim()
     val weight = prim.weightPrim()
     resetGraphView()
@@ -165,16 +135,15 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
         }
       }
     }
-    return null
+    return weight
   }
 
-  fun runCycleSearchAlgorithm(vertexId: Int): String? {
-
-    if (graph is DirectedGraph) {
-      return "CycleSearch algorithm can't be run on directed graphs."
-    }
+  fun runCycleSearchAlgorithm(vertexId: Int): Boolean {
     if (vertexId !in graph.vertices.keys) {
-      return "Vertex with id = $vertexId doesn't exists in the graph."
+      throw IllegalArgumentException("Vertex with id = $vertexId doesn't exists in the graph.")
+    }
+    if (graph is DirectedGraph<D>) {
+      throw IllegalArgumentException("CycleSearch algorithm cannot be run on directed graphs.")
     }
     val cycleSearch = CycleSearch(graph as UndirectedGraph)
     val result = cycleSearch.findCycle(Vertex(vertexId, graph.vertices[vertexId]!!.data))
@@ -189,9 +158,9 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
           edgeView.value.strokeWidth = 9f
         }
       }
-      return null
+      return false
     }
-    return "The vertex with id = $vertexId doesn't have a cycle around it. "
+    return true
   }
 
 }
