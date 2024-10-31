@@ -8,10 +8,9 @@ import kotlin.math.sin
 class CircularPlacementStrategy : RepresentationStrategy {
   override fun place(width: Double, height: Double, vertices: Collection<VertexViewModel>) {
     if (vertices.isEmpty()) {
-      println("CircularPlacementStrategy.place: there is nothing to place 👐🏻")
       return
     }
-    val center = Pair(width / 2, height / 2)
+    val center = Pair(width / 2, height * (3.0/5) )
     val angle = 2 * Math.PI / vertices.size
 
     val sorted = vertices.sortedBy { it.label }
