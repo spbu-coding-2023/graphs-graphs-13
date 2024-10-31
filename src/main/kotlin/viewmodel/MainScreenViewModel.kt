@@ -2,6 +2,7 @@ package viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import databases.FileSystem
 import databases.Neo4jRepository
 import model.graph.Graph
@@ -15,6 +16,7 @@ import model.graph.Vertex
 var defaultColorLine: Color = Color.Black
 var defaultColorVertex: Color = Color.Gray
 var defaultStrokeWidth: Float = 4f
+var defaultRadius = 25.0.dp
 
 class MainScreenViewModel(private val graph: Graph, private val representationStrategy: RepresentationStrategy) {
   val showVerticesLabels = mutableStateOf(false)
@@ -28,7 +30,10 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
 
   fun resetGraphView() {
     representationStrategy.place(800.0, 600.0, graphViewModel.verticesView.values)
-    graphViewModel.verticesView.values.forEach { v -> v.color = defaultColorVertex }
+    graphViewModel.verticesView.values.forEach { v ->
+      v.color = defaultColorVertex
+      v.radius = defaultRadius
+    }
     graphViewModel.edgesView.values.forEach { e ->
       e.color = defaultColorLine
       e.strokeWidth = defaultStrokeWidth
@@ -192,6 +197,21 @@ class MainScreenViewModel(private val graph: Graph, private val representationSt
       return null
     }
     return "The vertex with id = $vertexId doesn't have a cycle around it. "
+  }
+
+  fun runHarmonicCentralityAlgorithm(): HashMap<Int, Double> {
+
+    val graphForAlgorithm = HarmonicCentrality(graph)
+    val vertexIdAndIndex: HashMap<Int, Double> = graphForAlgorithm.harmonicCentrality()
+
+    resetGraphView()
+    for(vertex in vertexIdAndIndex) {
+      graphViewModel.verticesView[vertex.key]?.radius = ((17.0 + vertex.value*30).toInt()).dp
+      graphViewModel.verticesView[vertex.key]?.color =
+        Color( red = 255 - (vertex.value*190).toInt(), green = 0, blue = 154 - (vertex.value*110).toInt() )
+    }
+    return vertexIdAndIndex
+
   }
 
 }

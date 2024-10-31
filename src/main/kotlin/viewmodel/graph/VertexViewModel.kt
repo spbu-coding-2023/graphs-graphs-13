@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import model.graph.Vertex
+import viewmodel.defaultRadius
 
 class VertexViewModel(
   x: Dp = 0.dp,
@@ -15,7 +16,7 @@ class VertexViewModel(
   private val v: Vertex,
   private val _labelVisible: State<Boolean>,
   private val _idVisible: State<Boolean>,
-  val radius: Dp = 25.dp
+  var radius: Dp = defaultRadius
 ) {
   private var _x = mutableStateOf(x)
   var x: Dp

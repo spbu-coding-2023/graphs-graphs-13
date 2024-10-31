@@ -10,7 +10,7 @@ class CircularPlacementStrategy : RepresentationStrategy {
     if (vertices.isEmpty()) {
       return
     }
-    val center = Pair(width / 2, height * (3.0/5) )
+    val center = Pair(width * (4.0/5), height * (3.0/5) )
     val angle = 2 * Math.PI / vertices.size
 
     val sorted = vertices.sortedBy { it.label }

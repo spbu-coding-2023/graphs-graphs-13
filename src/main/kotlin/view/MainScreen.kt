@@ -155,6 +155,12 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }) {
               Text(text = "CycleSearch", color = MaterialTheme.colorScheme.onSecondary)
             }
+            DropdownMenuItem(onClick = {
+              expandedAlgorithmsMenu = false
+              viewModel.runHarmonicCentralityAlgorithm()
+            }) {
+              Text(text = "HarmonicCentrality", color = MaterialTheme.colorScheme.onSecondary)
+            }
           }
         }
         Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
