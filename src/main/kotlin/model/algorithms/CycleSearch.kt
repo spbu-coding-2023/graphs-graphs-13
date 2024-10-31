@@ -18,6 +18,7 @@ import model.graph.Vertex
 
 class CycleSearch(private val graph: UndirectedGraph) {
 
+    private var cycleIsFound: Boolean = false
     /**
      * This auxiliary function for the function [findAnyCycle] aims to get from
      * some hashmap with extra elements the hashmap the elements of which
@@ -63,12 +64,16 @@ class CycleSearch(private val graph: UndirectedGraph) {
 
         for (idAdjacency in graph.adjacency[currentVertexId]!!.keys) {
 
+            if (cycleIsFound){
+                return
+            }
             if (visited[idAdjacency] == false) {
                 visited[idAdjacency] = true
                 cyclePath[currentVertexId] = idAdjacency
                 dfs(cycleVertexId, idAdjacency, visited, cyclePath)
             } else if (idAdjacency == cycleVertexId && cyclePath[cycleVertexId] != currentVertexId) {
                 cyclePath[currentVertexId] = idAdjacency
+                cycleIsFound = true
                 return
             }
         }
@@ -89,6 +94,7 @@ class CycleSearch(private val graph: UndirectedGraph) {
         }
         visited[vertexId] = true
         dfs(vertexId, vertexId, visited, devCyclePath)
+        cycleIsFound = false
 
         if (devCyclePath.filter { it.value == vertexId }.isEmpty()) {
             return null
