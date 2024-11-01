@@ -2,31 +2,25 @@ package view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import model.graph.Graph
-import androidx.compose.material3.MaterialTheme
-import org.jetbrains.skia.impl.Stats.enabled
 import view.graph.GraphView
 import viewmodel.MainScreenViewModel
-import viewmodel.graph.CircularPlacementStrategy
-import viewmodel.graph.GraphViewModel
 
 @Composable
-fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
+fun MainScreen(viewModel: MainScreenViewModel) {
   var theme by remember { mutableStateOf(Theme.NASTYA) }
   var expandedAlgorithmsMenu by remember { mutableStateOf(false) }
   var expandedAddMenu by remember { mutableStateOf(false) }
   var expandedRemoveMenu by remember { mutableStateOf(false) }
+  var expandedSaveMenu by remember { mutableStateOf(false) }
 
   var showDijkstraDialog by remember { mutableStateOf(false) }
   var showCycleSearchDialog by remember { mutableStateOf(false) }
@@ -34,11 +28,19 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
   var showAddVertexDialog by remember { mutableStateOf(false) }
   var showRemoveVertexDialog by remember { mutableStateOf(false) }
   var showRemoveEdgeDialog by remember { mutableStateOf(false) }
+  var showNeo4jDialog by remember { mutableStateOf(false) }
+  var showErrorDialog by remember { mutableStateOf(false) }
+  var errorMessage: String? = null
+  fun catchError(messageOfError: String?) {
+    if (messageOfError != null) {
+      errorMessage = messageOfError
+      showErrorDialog = true
+    }
+  }
+
   Material3AppTheme(theme) {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
-      Column(modifier = Modifier.width(300.dp).fillMaxHeight().background(MaterialTheme.colorScheme.surface)) {
+    Row {
+      Column(modifier = Modifier.width(270.dp).fillMaxHeight().background(MaterialTheme.colorScheme.surface)) {
         Row {
           Checkbox(
             checked = viewModel.showVerticesLabels.value, onCheckedChange = {
@@ -49,6 +51,21 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
           )
           Text(
             text = "Show vertices data",
+            fontSize = 18.sp,
+            modifier = Modifier.padding(10.dp),
+            color = MaterialTheme.colorScheme.onSurface
+          )
+        }
+        Row {
+          Checkbox(
+            checked = viewModel.showVerticesId.value, onCheckedChange = {
+              viewModel.showVerticesId.value = it
+            }, colors = CheckboxDefaults.colors(
+              checkedColor = MaterialTheme.colorScheme.primary
+            )
+          )
+          Text(
+            text = "Show vertices id",
             fontSize = 18.sp,
             modifier = Modifier.padding(10.dp),
             color = MaterialTheme.colorScheme.onSurface
@@ -72,6 +89,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
         Button(
           onClick = viewModel::resetGraphView,
           enabled = true,
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
           colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -79,20 +97,26 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
         ) {
           Text(
             text = "Reset default settings",
-            fontSize = 20.sp,
-            modifier = Modifier.padding(4.dp),
-            color = MaterialTheme.colorScheme.onPrimary
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.align(Alignment.CenterVertically)
           )
         }
-        Box {
-          Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(modifier = Modifier.padding(horizontal = 10.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Button(
               onClick = { expandedAlgorithmsMenu = true }, colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
-              )
+              ),
+              modifier = Modifier.fillMaxWidth()
             ) {
-              Text(text = "Algorithm", color = MaterialTheme.colorScheme.onPrimary)
+              Text(
+                text = "Algorithm",
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.align(Alignment.CenterVertically)
+              )
               Icon(Icons.Default.ArrowDropDown, contentDescription = "Select algorithm")
             }
           }
@@ -109,7 +133,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
-              viewModel.runKosarajuAlgorithm()
+              catchError(viewModel.runKosarajuAlgorithm())
             }) {
               Text(text = "Kosaraju", color = MaterialTheme.colorScheme.onSecondary)
             }
@@ -121,28 +145,29 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
-              viewModel.runPrimAlgorithm()
+              catchError(viewModel.runPrimAlgorithm())
             }) {
-              Text("Prim")
+              Text(text = "Prim", color = MaterialTheme.colorScheme.onSecondary)
             }
             DropdownMenuItem(onClick = {
               expandedAlgorithmsMenu = false
               showCycleSearchDialog = true
             }) {
-              Text("CycleSearch")
+              Text(text = "CycleSearch", color = MaterialTheme.colorScheme.onSecondary)
             }
           }
         }
-        Row {
-          Box(modifier = Modifier.padding(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(horizontal = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+          Box(modifier = Modifier.weight(1f).padding(end = 2.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
               Button(
                 onClick = { expandedAddMenu = true }, colors = ButtonDefaults.buttonColors(
                   backgroundColor = MaterialTheme.colorScheme.primary,
                   contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                ),
+                modifier = Modifier.fillMaxWidth()
               ) {
-                Text(text = "Add", color = MaterialTheme.colorScheme.onPrimary)
+                Text(text = "Add", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Add")
               }
             }
@@ -165,15 +190,16 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
               }
             }
           }
-          Box(modifier = Modifier.padding(2.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+          Box(modifier = Modifier.weight(1f).padding(end = 2.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
               Button(
                 onClick = { expandedRemoveMenu = true }, colors = ButtonDefaults.buttonColors(
                   backgroundColor = MaterialTheme.colorScheme.primary,
                   contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                ),
+                modifier = Modifier.fillMaxWidth()
               ) {
-                Text(text = "Remove", color = MaterialTheme.colorScheme.onPrimary)
+                Text(text = "Remove", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
                 Icon(Icons.Default.ArrowDropDown, contentDescription = "Remove")
               }
             }
@@ -197,55 +223,98 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
             }
           }
         }
-      }
-      Box {
-        var expandedThemeMenu by remember { mutableStateOf(false) }
-        Button(
-          onClick = { expandedThemeMenu = true },
-          modifier = Modifier.align(Alignment.TopEnd), colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-          )
-        ) {
-          Text(text = "Theme", color = MaterialTheme.colorScheme.onPrimary)
-          Icon(Icons.Default.ArrowDropDown, contentDescription = "Select theme")
-        }
-        DropdownMenu(
-          expanded = expandedThemeMenu,
-          onDismissRequest = { expandedThemeMenu = false },
-          modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
-        ) {
-          DropdownMenuItem(onClick = {
-            theme = Theme.NASTYA
-            expandedThemeMenu = false
-          }) {
-            Text("Nastya's theme", color = MaterialTheme.colorScheme.onSecondary)
+        Box(modifier = Modifier.padding(horizontal = 10.dp)) {
+          Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Button(
+              onClick = { expandedSaveMenu = true }, colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+              ),
+              modifier = Modifier.fillMaxWidth()
+            ) {
+              Text(text = "Save graph", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Save graph")
+            }
           }
-          DropdownMenuItem(onClick = {
-            theme = Theme.LIYA
-            expandedThemeMenu = false
-          }) {
-            Text("Liya's theme", color = MaterialTheme.colorScheme.onSecondary)
-          }
-          DropdownMenuItem(onClick = {
-            theme = Theme.KATYA
-            expandedThemeMenu = false
-          }) {
-            Text("Katya's theme", color = MaterialTheme.colorScheme.onSecondary)
+          DropdownMenu(
+            expanded = expandedSaveMenu,
+            onDismissRequest = { expandedSaveMenu = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+          ) {
+            DropdownMenuItem(onClick = {
+              expandedSaveMenu = false
+              showNeo4jDialog = true
+            }) {
+              Text("Save to Neo4j", color = MaterialTheme.colorScheme.onSecondary)
+            }
+            DropdownMenuItem(onClick = {
+              expandedSaveMenu = false
+              catchError(viewModel.saveToFile())
+            }) {
+              Text("Save to json-file", color = MaterialTheme.colorScheme.onSecondary)
+            }
           }
         }
       }
       Surface(
         modifier = Modifier.weight(1f).background(MaterialTheme.colorScheme.background),
       ) {
-        GraphView(viewModel.graphViewModel)
+        Box(modifier = Modifier.fillMaxSize()) {
+          GraphView(viewModel.graphViewModel) // График занимает всё пространство
+
+          var expandedThemeMenu by remember { mutableStateOf(false) }
+
+          // Кнопка темы
+          Box(
+            modifier = Modifier
+              .align(Alignment.TopEnd) // Выровнено по правому верхнему углу
+              .padding(16.dp)
+          ) {
+            // Кнопка
+            Button(
+              onClick = { expandedThemeMenu = true },
+              colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+              )
+            ) {
+              Text(text = "Theme", fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimary)
+              Icon(Icons.Default.ArrowDropDown, contentDescription = "Select theme")
+            }
+            // Выпадающее меню
+            DropdownMenu(
+              expanded = expandedThemeMenu,
+              onDismissRequest = { expandedThemeMenu = false },
+              modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
+            ) {
+              DropdownMenuItem(onClick = {
+                theme = Theme.NASTYA
+                expandedThemeMenu = false
+              }) {
+                Text("Nastya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+              DropdownMenuItem(onClick = {
+                theme = Theme.LIYA
+                expandedThemeMenu = false
+              }) {
+                Text("Liya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+              DropdownMenuItem(onClick = {
+                theme = Theme.KATYA
+                expandedThemeMenu = false
+              }) {
+                Text("Katya's theme", color = MaterialTheme.colorScheme.onSecondary)
+              }
+            }
+          }
+        }
       }
     }
     if (showDijkstraDialog) {
       DijkstraDialog(
         onDismiss = { showDijkstraDialog = false },
         onRunAlgorithm = { start, end ->
-          viewModel.runDijkstraAlgorithm(start, end)
+          catchError(viewModel.runDijkstraAlgorithm(start, end))
           showDijkstraDialog = false
         }
       )
@@ -254,7 +323,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       AddVertexDialog(
         onDismiss = { showAddVertexDialog = false },
         onRunAlgorithm = { id, data ->
-          viewModel.addVertex(id, data as D)
+          catchError(viewModel.addVertex(id, data))
           showAddVertexDialog = false
         }
       )
@@ -263,7 +332,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       CycleSearchDialog(
         onDismiss = { showCycleSearchDialog = false },
         onRunAlgorithm = { vertexId ->
-          viewModel.runCycleSearchAlgorithm(vertexId)
+          catchError(viewModel.runCycleSearchAlgorithm(vertexId))
           showCycleSearchDialog = false
         }
       )
@@ -272,7 +341,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       RemoveVertexDialog(
         onDismiss = { showRemoveVertexDialog = false },
         onRunAlgorithm = { id ->
-          viewModel.removeVertex(id)
+          catchError(viewModel.removeVertex(id))
           showRemoveVertexDialog = false
         }
       )
@@ -281,7 +350,7 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       AddEdgeDialog(
         onDismiss = { showAddEdgeDialog = false },
         onRunAlgorithm = { from, to, w ->
-          viewModel.addEdge(from, to, w)
+          catchError(viewModel.addEdge(from, to, w))
           showAddEdgeDialog = false
         }
       )
@@ -290,9 +359,24 @@ fun <D> MainScreen(viewModel: MainScreenViewModel<D>) {
       RemoveEdgeDialog(
         onDismiss = { showRemoveEdgeDialog = false },
         onRunAlgorithm = { from, to ->
-          viewModel.removeEdge(from, to)
+          catchError(viewModel.removeEdge(from, to))
           showRemoveEdgeDialog = false
         }
+      )
+    }
+    if (showNeo4jDialog) {
+      Neo4jDialog(
+        onDismiss = { showNeo4jDialog = false },
+        onRunAlgorithm = { uri, user, password ->
+          catchError(viewModel.saveToNeo4j(uri, user, password))
+          showNeo4jDialog = false
+        }
+      )
+    }
+    if (showErrorDialog) {
+      ErrorDialog(
+        onDismiss = { showErrorDialog = false },
+        errorMessage!!
       )
     }
   }

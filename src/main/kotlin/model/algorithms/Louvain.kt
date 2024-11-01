@@ -6,7 +6,7 @@ import model.graph.Graph
  * Louvain algorithm for detecting communities in a graph.
  * @param graph The graph in which communities should be discovered.
  */
-class Louvain<D>(private val graph: Graph<D>) {
+class Louvain(private val graph: Graph) {
 
   /**
    * Method for detecting communities in a graph using the Louvain algorithm.

@@ -11,14 +11,14 @@ import model.graph.Vertex
  * At the same time, the algorithm has some minimization of the desired cycle
  * by iterating through possible pairs of neighbors of the selected vertex
  * through which the desired cycle will pass.
- * @param D input type
  * @property [graph] a undirected graph for whose vertex we will search for a cycle
  * @constructor Creates a graph, based on [graph],for which it will be possible to apply
  * a cycle search algorithm around the vertex selected in it.
  */
 
-class CycleSearch<D>(private val graph: UndirectedGraph<D>) {
+class CycleSearch(private val graph: UndirectedGraph) {
 
+    private var cycleIsFound: Boolean = false
     /**
      * This auxiliary function for the function [findAnyCycle] aims to get from
      * some hashmap with extra elements the hashmap the elements of which
@@ -64,12 +64,16 @@ class CycleSearch<D>(private val graph: UndirectedGraph<D>) {
 
         for (idAdjacency in graph.adjacency[currentVertexId]!!.keys) {
 
+            if (cycleIsFound){
+                return
+            }
             if (visited[idAdjacency] == false) {
                 visited[idAdjacency] = true
                 cyclePath[currentVertexId] = idAdjacency
                 dfs(cycleVertexId, idAdjacency, visited, cyclePath)
             } else if (idAdjacency == cycleVertexId && cyclePath[cycleVertexId] != currentVertexId) {
                 cyclePath[currentVertexId] = idAdjacency
+                cycleIsFound = true
                 return
             }
         }
@@ -90,6 +94,7 @@ class CycleSearch<D>(private val graph: UndirectedGraph<D>) {
         }
         visited[vertexId] = true
         dfs(vertexId, vertexId, visited, devCyclePath)
+        cycleIsFound = false
 
         if (devCyclePath.filter { it.value == vertexId }.isEmpty()) {
             return null
@@ -110,23 +115,19 @@ class CycleSearch<D>(private val graph: UndirectedGraph<D>) {
      * @param vertex the vertex around which the cycle must be found
      * @return cycle path or null if it doesn't exist
      */
-    fun findCycle(vertex: Vertex<D>): UndirectedGraph<D>? {
+    fun findCycle(vertex: Vertex): UndirectedGraph? {
 
         var returnCyclePath = hashMapOf<Int, Int>()
         var currentCyclePath: HashMap<Int, Int>?
         var minCycleSize: Int = Int.MAX_VALUE
-
-        if (vertex.id !in graph.vertices.keys) {
-            throw IllegalArgumentException("Vertex with id = ${vertex.id} doesn't exist in the graph")
-        }
-        val returnGraph = UndirectedGraph<D>()
+        val returnGraph = UndirectedGraph()
         if (graph.adjacency[vertex.id]!!.size < 2) {
             return null
         } else { // we consider all possible cases of a cycle by choosing a pair of neighbors to minimize the found cycle
             val adjacencyOfVertex: MutableList<Int> = arrayListOf()
             graph.adjacency[vertex.id]!!.keys.forEach { adjacencyOfVertex.add(it) }
             val adjacencyWas: MutableList<Int> = arrayListOf()
-            val removedEdges: MutableList<Edge<Int>> = arrayListOf()
+            val removedEdges: MutableList<Edge> = arrayListOf()
             for (firstAdjacency in adjacencyOfVertex) {
                 adjacencyWas.add(firstAdjacency)
                 for (secondAdjacency in adjacencyOfVertex.filter { it !in adjacencyWas && it != vertex.id }) {

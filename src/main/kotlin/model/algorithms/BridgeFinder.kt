@@ -2,11 +2,11 @@ package model.algorithms
 
 import model.graph.Graph
 
-class BridgeFinder<D> {
+class BridgeFinder {
     private var time = 0
     private val NIL = -1
 
-    fun findBridges(graph: Graph<D>): List<Pair<Int, Int>> {
+    fun findBridges(graph: Graph): List<Pair<Int, Int>> {
         val visited = BooleanArray(graph.vertices.size)
         val disc = IntArray(graph.vertices.size)
         val low = IntArray(graph.vertices.size)
@@ -27,7 +27,7 @@ class BridgeFinder<D> {
         return bridges
     }
 
-    private fun bridgeUtil(u: Int, visited: BooleanArray, disc: IntArray, low: IntArray, parent: IntArray, graph: Graph<D>, bridges: MutableList<Pair<Int, Int>>) {
+    private fun bridgeUtil(u: Int, visited: BooleanArray, disc: IntArray, low: IntArray, parent: IntArray, graph: Graph, bridges: MutableList<Pair<Int, Int>>) {
         visited[u] = true
         disc[u] = ++time
         low[u] = time

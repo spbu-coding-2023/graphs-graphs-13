@@ -8,16 +8,8 @@ import kotlin.test.assertFailsWith
 
 class CycleSearchTest {
 
-    private var graph = UndirectedGraph<Int>()
+    private var graph = UndirectedGraph()
     private var cycleGraph = CycleSearch(graph)
-
-    @Test
-    fun `passing as function argument a non-existent vertex should throw an exception`() {
-
-        addVertices(graph, 3)
-        assertFailsWith<IllegalArgumentException> { cycleGraph.findCycle(Vertex(4, 4)) }
-
-    }
 
     @Test
     fun `search for a cycle at a single vertex must be correct`() {
@@ -49,7 +41,7 @@ class CycleSearchTest {
             addEdge(2 to 3, 12)
             addEdge(1 to 3, 4)
         }
-        cycleGraph.findCycle(graph.vertices[1]!!)
+        assertEquals(true,cycleGraph.findCycle(graph.vertices[1]!!) != null)
 
     }
 

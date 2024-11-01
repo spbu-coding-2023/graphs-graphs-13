@@ -6,7 +6,7 @@ import forTests.addVertices
 
 class PrimTest {
 
-    private val undirGraph = UndirectedGraph<Int>()
+    private val undirGraph = UndirectedGraph()
     private var primGraph = Prim(undirGraph)
 
     @Test

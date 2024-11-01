@@ -1,33 +1,33 @@
 package model.graph
 
-class UndirectedGraph<D>() : Graph<D>() {
-  override fun addEdge(v: Pair<Int, Int>, w: Int?) {
-    // добавить проверку на повторку ребра
+class UndirectedGraph() : Graph() {
+  override fun addEdge(v: Pair<Int, Int>, w: Int?): String? {
     if (!vertices.containsKey(v.first)) {
-      throw IllegalArgumentException("Vertex with id: ${v.first} not exists in the graph.")
+      return "Vertex with id: ${v.first} not exists in the graph."
     }
     if (!vertices.containsKey(v.second)) {
-      throw IllegalArgumentException("Vertex with id: ${v.second} not exists in the graph.")
+      return "Vertex with id: ${v.second} not exists in the graph."
     }
     if (v.first == v.second) {
-      throw IllegalArgumentException("Can't add edge from vertex to itself.")
+      return "Can't add edge from vertex to itself."
     }
     edges.add(Edge(Pair(v.first, v.second), w))
     edges.add(Edge(Pair(v.second, v.first), w))
     adjacency.getOrPut(v.first) { hashMapOf() }[v.second] = w
     adjacency.getOrPut(v.second) { hashMapOf() }[v.first] = w
+    return null
   }
 
-  override fun removeEdge(v: Pair<Int, Int>) {
+  override fun removeEdge(v: Pair<Int, Int>): String? {
 
     if (!vertices.containsKey(v.first)) {
-      throw IllegalArgumentException("Vertex with id: ${v.first} not exists in the graph.")
+      return "Vertex with id: ${v.first} not exists in the graph."
     }
     if (!vertices.containsKey(v.second)) {
-      throw IllegalArgumentException("Vertex with id: ${v.second} not exists in the graph.")
+      return "Vertex with id: ${v.second} not exists in the graph."
     }
     if (v.second !in adjacency[v.first]!!.keys) {
-      throw IllegalArgumentException("Edge from ${v.first} to ${v.second} not exists in the graph.")
+      return "Edge from ${v.first} to ${v.second} not exists in the graph."
     }
     edges.find { it.vertices == Pair(v.first, v.second) }?.let { edge ->
       edges.remove(edge)
@@ -37,12 +37,12 @@ class UndirectedGraph<D>() : Graph<D>() {
     }
     adjacency[v.first]!!.remove(v.second)
     adjacency[v.second]!!.remove(v.first)
-
+    return null
   }
 
-  override fun removeVertex(id: Int) {
+  override fun removeVertex(id: Int): String? {
     if (!vertices.containsKey(id)) {
-      throw IllegalArgumentException("Vertex with id: $id doesn't exist in the graph.")
+      return "Vertex with id: $id doesn't exist in the graph."
     }
     if (adjacency[id]!!.isNotEmpty()) {
       for (idAdjacency in adjacency[id]!!.keys) {
@@ -50,6 +50,7 @@ class UndirectedGraph<D>() : Graph<D>() {
       }
     }
     vertices.remove(id)
+    return null
   }
 
 }

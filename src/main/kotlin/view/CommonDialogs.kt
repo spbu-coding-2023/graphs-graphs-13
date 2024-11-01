@@ -1,6 +1,5 @@
 package view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,6 +10,82 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+@Composable
+fun Neo4jDialog(onDismiss: () -> Unit, onRunAlgorithm: (String, String, String) -> Unit) {
+  var uri by remember { mutableStateOf("") }
+  var user by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
+
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text("Enter your Neo4j details")
+    },
+    text = {
+      Column(modifier = Modifier.padding(16.dp)) {
+        TextField(
+          value = uri,
+          onValueChange = { uri = it },
+          label = { Text("Uri") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+        TextField(
+          value = user,
+          onValueChange = { user = it },
+          label = { Text("User") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+        TextField(
+          value = password,
+          onValueChange = { password = it },
+          label = { Text("Password") },
+          modifier = Modifier.padding(bottom = 12.dp),
+          colors = TextFieldDefaults.textFieldColors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.secondary
+          )
+        )
+      }
+    },
+    confirmButton = {
+      Button(
+        onClick = {
+          onRunAlgorithm(uri, user, password)
+        },
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+      ) {
+        Text("Ok", color = MaterialTheme.colorScheme.onPrimary)
+      }
+    },
+    dismissButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.primary)
+      ) {
+        Text("Cancel", color = MaterialTheme.colorScheme.onPrimary)
+      }
+    }
+  )
+}
 
 @Composable
 fun DijkstraDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) {
@@ -396,4 +471,27 @@ fun RemoveEdgeDialog(onDismiss: () -> Unit, onRunAlgorithm: (Int, Int) -> Unit) 
       }
     }
   )
+}
+
+@Composable
+fun ErrorDialog(onDismiss: () -> Unit, errorMessage: String) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text(
+        text = "Error:", color = MaterialTheme.colorScheme.errorContainer,
+        fontSize = 20.sp
+      )
+    },
+    text = { Text(text = errorMessage, color = MaterialTheme.colorScheme.onErrorContainer) },
+    confirmButton = {
+      Button(
+        onClick = onDismiss,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.errorContainer)
+      ) {
+        Text(text = "ОК", color = MaterialTheme.colorScheme.onErrorContainer)
+      }
+    }
+  )
+
 }
